@@ -6,191 +6,472 @@
     <title>MBDAAOWA Resident Verification Search</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
+
+        * { font-family: 'DM Sans', sans-serif; }
+
         .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #3498db;
+            border: 3px solid #e5e7eb;
+            border-top: 3px solid #7f1d1d;
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
+            width: 28px; height: 28px;
+            animation: spin 0.9s linear infinite;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        @keyframes spin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
+
+        /* Logo SVG inline */
+        .logo-ring { fill: none; stroke: #fff; stroke-width: 2; }
+
+        /* Hero gradient */
+        .hero-gradient {
+            background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 40%, #1e3a5f 100%);
         }
+
+        /* Card hover */
+        .res-card { transition: box-shadow .2s, transform .2s; }
+        .res-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,.12); transform: translateY(-2px); }
+
+        /* Search bar focus ring */
+        .search-input:focus { outline: none; box-shadow: 0 0 0 3px rgba(127,29,29,.2); border-color: #7f1d1d; }
+
+        /* Badge colours */
+        .badge-owner   { background:#dbeafe; color:#1e40af; }
+        .badge-tenant  { background:#fef3c7; color:#92400e; }
+        .badge-vehicle { background:#f0fdf4; color:#166534; border:1px solid #bbf7d0; }
+        .badge-block   { background:#7f1d1d; color:#fff; }
+
+        /* Placeholder prompt */
+        #prompt-msg { color:#9ca3af; }
+
+        /* Verified checkmark */
+        .chip-verified { background:#dcfce7; color:#166534; }
+        .chip-floor    { background:#ede9fe; color:#5b21b6; }
+
+        /* Ground floor special */
+        .gf-badge { background:#fef9c3; color:#713f12; border:1px solid #fde68a; }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen pb-12">
+<body class="bg-gray-50 min-h-screen pb-16">
 
-    <div class="bg-blue-600 text-white text-center py-6 px-4 shadow-md">
-        <h1 class="text-xl md:text-2xl font-bold">MBDAAOWA Resident Search</h1>
-        <p class="text-sm text-blue-100 mt-1">ನಿವಾಸಿ ದೃಢೀಕರಣ ಪರಿಶೀಲನೆ (Read-Only Portal)</p>
-    </div>
+<!-- ═══════════════════ HEADER ═══════════════════ -->
+<header class="hero-gradient text-white shadow-lg">
+    <div class="max-w-5xl mx-auto px-4 py-5 flex items-center gap-4">
 
-    <div class="max-w-4xl mx-auto mt-6 px-4">
-        
-        <div class="bg-white p-5 rounded-lg shadow-sm border border-gray-200 mb-6">
-            <label for="search-input" class="block text-gray-700 font-medium mb-2">Search Resident Details</label>
-            <div class="flex flex-col sm:flex-row gap-3">
-                <input 
-                    type="text" 
-                    id="search-input" 
-                    placeholder="Enter Name, Flat No, Block, or Vehicle Number..." 
-                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
-                >
-                <button 
-                    onclick="filterData()" 
-                    class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-2 rounded-md transition-colors"
-                >
-                    Search
-                </button>
-            </div>
-            <p class="text-xs text-gray-500 mt-2">*Note: You can query by Block (e.g., B18), Flat Number, or Vehicle registration details.</p>
+        <!-- Logo SVG (MBDAAOWA house icon inline) -->
+        <div class="flex-shrink-0">
+            <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="32" cy="32" r="31" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+                <!-- House body -->
+                <rect x="16" y="34" width="32" height="18" rx="1" fill="rgba(255,255,255,0.9)"/>
+                <!-- Roof -->
+                <polygon points="32,13 11,34 53,34" fill="#fff"/>
+                <!-- Roof accent -->
+                <polygon points="32,16 14,34 50,34" fill="rgba(255,255,255,0.3)"/>
+                <!-- Door -->
+                <rect x="26" y="42" width="12" height="10" rx="1" fill="#7f1d1d"/>
+                <!-- Left window -->
+                <rect x="18" y="37" width="7" height="6" rx="0.5" fill="#bfdbfe"/>
+                <!-- Right window -->
+                <rect x="39" y="37" width="7" height="6" rx="0.5" fill="#bfdbfe"/>
+                <!-- Chimney -->
+                <rect x="40" y="20" width="4" height="10" fill="rgba(255,255,255,0.75)"/>
+                <!-- Multi-flat lines (BDA grid) -->
+                <line x1="32" y1="34" x2="32" y2="52" stroke="rgba(127,29,29,0.4)" stroke-width="1"/>
+                <line x1="16" y1="43" x2="48" y2="43" stroke="rgba(127,29,29,0.3)" stroke-width="0.8"/>
+            </svg>
         </div>
 
-        <div id="status-container" class="flex justify-center items-center py-6 hidden">
-            <div class="loader mr-3"></div>
-            <span class="text-gray-600 font-medium" id="status-text">Fetching live data...</span>
+        <!-- Title block -->
+        <div class="flex-1 min-w-0">
+            <h1 class="text-lg md:text-xl font-bold leading-tight tracking-wide">
+                MALAGALA BDA APARTMENTS OWNERS WELFARE ASSOCIATION ®
+            </h1>
+            <p class="text-xs text-red-200 mt-0.5 font-medium tracking-wider">MBDAAOWA</p>
+            <p class="text-xs text-blue-200 mt-0.5">
+                ನಿವಾಸಿ ದೃಢೀಕರಣ ಪರಿಶೀಲನೆ — Resident Verification Portal
+            </p>
+            <p class="text-[10px] text-gray-300 mt-1">
+                Survey No: 53 &amp; 36 · Panchashila Nagar · Nagarabhavi · Bengaluru 560 072 &nbsp;|&nbsp;
+                Reg: SOR/RJR/S-91/2016-17
+            </p>
         </div>
 
-        <div id="results-count" class="text-sm text-gray-600 mb-3 hidden"></div>
+        <!-- Registration badge -->
+        <div class="hidden md:flex flex-col items-center bg-white bg-opacity-10 border border-white border-opacity-20 rounded-lg px-3 py-2 text-center flex-shrink-0">
+            <span class="text-[9px] text-gray-300 uppercase tracking-widest">Registered</span>
+            <span class="text-xs font-bold text-white mt-0.5">18 Blocks</span>
+            <span class="text-[10px] text-gray-300">288 Flats</span>
+        </div>
+    </div>
+</header>
 
-        <div id="results-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            </div>
+<!-- ═══════════════════ SEARCH PANEL ═══════════════════ -->
+<main class="max-w-5xl mx-auto mt-6 px-4">
+
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 mb-5">
+        <h2 class="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+            <svg class="w-4 h-4 text-red-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+            Search Resident / ನಿವಾಸಿ ಹುಡುಕಿ
+        </h2>
+
+        <!-- Main search bar -->
+        <div class="flex gap-2 mb-3">
+            <input
+                type="text"
+                id="search-input"
+                placeholder="Enter Name, Block (e.g. B7), Vehicle Number, or Phone…"
+                class="search-input w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-800 bg-gray-50"
+                autocomplete="off"
+            >
+            <button
+                onclick="triggerSearch()"
+                class="bg-red-900 hover:bg-red-800 active:bg-red-950 text-white font-semibold px-5 py-2.5 rounded-lg text-sm transition-colors whitespace-nowrap"
+            >
+                Search
+            </button>
+        </div>
+
+        <!-- Filter row -->
+        <div class="flex flex-wrap gap-2 items-center">
+            <span class="text-xs text-gray-500 font-medium">Filter:</span>
+            <select id="filter-block" onchange="triggerSearch()"
+                class="text-xs px-3 py-1.5 border border-gray-200 rounded-md bg-white text-gray-700 cursor-pointer">
+                <option value="">All Blocks</option>
+            </select>
+            <select id="filter-type" onchange="triggerSearch()"
+                class="text-xs px-3 py-1.5 border border-gray-200 rounded-md bg-white text-gray-700 cursor-pointer">
+                <option value="">All Types</option>
+                <option value="Owner">Owner</option>
+                <option value="Tenant">Tenant</option>
+            </select>
+            <button onclick="clearAll()"
+                class="text-xs px-3 py-1.5 border border-gray-200 rounded-md bg-white text-gray-500 hover:bg-gray-50 cursor-pointer">
+                Clear All
+            </button>
+        </div>
+
+        <p class="text-[10px] text-gray-400 mt-3 flex items-center gap-1">
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Type at least 1 character and press Search or Enter to view results. Data is read-only from Google Sheets.
+        </p>
     </div>
 
-    <script>
-        // Directly pointing to your Sheet ID and target range
-        const SHEET_ID = '1QQ6lkJAO2oZprVqUWPyV5S4ouROkoxAJuHg_p287a14';
-        const SHEET_NAME = encodeURIComponent('Form Responses 1');
-        const FETCH_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_NAME}`;
+    <!-- Status / Loader -->
+    <div id="status-container" class="flex justify-center items-center py-8 hidden">
+        <div class="loader mr-3"></div>
+        <span class="text-gray-500 text-sm" id="status-text">Fetching live data…</span>
+    </div>
 
-        let allResidents = [];
+    <!-- Prompt (default state before any search) -->
+    <div id="prompt-msg" class="text-center py-16">
+        <svg class="w-14 h-14 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M8 16l-4-4m0 0l4-4m-4 4h16M16 8l4 4m0 0l-4 4"/>
+        </svg>
+        <p class="text-gray-400 font-medium text-sm">Enter a search term above to find resident details</p>
+        <p class="text-gray-300 text-xs mt-1">ಮೇಲೆ ಹುಡುಕಾಟ ನಮೂದಿಸಿ</p>
+    </div>
 
-        // Fetch data on page load
-        document.addEventListener("DOMContentLoaded", () => {
-            showStatus(true, "Loading resident directory...");
-            fetch(FETCH_URL)
-                .then(res => res.text())
-                .then(text => {
-                    // Clean up Google Visualization JSON sandbox wrapper
-                    const data = JSON.parse(text.substr(47).slice(0, -2));
-                    processGoogleData(data);
-                })
-                .catch(err => {
-                    console.error(err);
-                    showStatus(true, "Error loading database. Please check sheet privacy permissions.");
-                });
-        });
+    <!-- Results count -->
+    <div id="results-count" class="text-xs text-gray-500 mb-3 hidden flex items-center justify-between">
+        <span id="count-text"></span>
+        <span id="page-info" class="text-gray-400"></span>
+    </div>
 
-        function showStatus(show, text = "") {
-            const container = document.getElementById('status-container');
-            const statusText = document.getElementById('status-text');
-            const loader = container.querySelector('.loader');
-            
-            if (show) {
-                container.classList.remove('hidden');
-                statusText.innerText = text;
-                if(text.includes("Error")) loader.classList.add('hidden');
-            } else {
-                container.classList.add('hidden');
-            }
+    <!-- Results grid -->
+    <div id="results-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+
+    <!-- No results -->
+    <div id="no-results" class="hidden bg-white rounded-xl border border-gray-200 p-10 text-center">
+        <svg class="w-10 h-10 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <p class="text-gray-500 font-medium text-sm">No matches found</p>
+        <p class="text-gray-400 text-xs mt-1">ಯಾವುದೇ ಹೊಂದಾಣಿಕೆ ಕಂಡುಬಂದಿಲ್ಲ</p>
+    </div>
+
+</main>
+
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<footer class="max-w-5xl mx-auto px-4 mt-10 text-center text-[10px] text-gray-400 border-t border-gray-200 pt-4">
+    MBDAAOWA &copy; 2026 &nbsp;|&nbsp; Read-Only Resident Directory &nbsp;|&nbsp; Data from Google Sheets (live) &nbsp;|&nbsp;
+    <span class="text-red-900 font-medium">Secretary: MBDAAOWA</span>
+</footer>
+
+<!-- ═══════════════════ SCRIPT ═══════════════════ -->
+<script>
+const SHEET_ID   = '1QQ6lkJAO2oZprVqUWPyV5S4ouROkoxAJuHg_p287a14';
+const SHEET_NAME = encodeURIComponent('Form Responses 1');
+const FETCH_URL  = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_NAME}`;
+
+let allResidents = [];
+let searchDone   = false;
+
+// Ground-floor flat codes that should NOT show "NA"
+const GF_FLATS = ['001','002','003','004'];
+
+// ── Floor label from flat number ──────────────────────────────
+function floorLabel(flat) {
+    const n = parseInt(flat, 10);
+    if (isNaN(n)) return '';
+    if (n <= 4)           return 'Ground Floor';
+    if (n >= 101 && n <= 104) return '1st Floor';
+    if (n >= 201 && n <= 204) return '2nd Floor';
+    if (n >= 301 && n <= 304) return '3rd Floor';
+    return '';
+}
+
+// ── Sanitise a value — never show N/A for GF flat numbers ─────
+function safeVal(val, field, flat) {
+    if (!val || val === 'N/A' || val.toString().trim() === '') {
+        // For flat field, ground-floor flats must show their real number
+        if (field === 'flat' && GF_FLATS.includes(flat)) return flat;
+        return null; // null = omit the row from the card
+    }
+    return val.toString().trim();
+}
+
+// ── Normalise flat: pad single digit to e.g. "001" ────────────
+function normFlat(raw) {
+    if (!raw) return '';
+    const s = raw.toString().trim();
+    const n = parseInt(s, 10);
+    if (!isNaN(n) && n >= 1 && n <= 4) return String(n).padStart(3, '0');
+    return s;
+}
+
+// ── Vehicle plate cleanup ─────────────────────────────────────
+function cleanPlate(v) {
+    if (!v) return null;
+    return v.replace(/\s+/g, ' ').trim().toUpperCase();
+}
+
+// ─────────────────────────────────────────────────────────────
+// FETCH
+// ─────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+    showStatus(true, 'Loading resident directory…');
+    fetch(FETCH_URL)
+        .then(r => r.text())
+        .then(text => {
+            const json = JSON.parse(text.substring(47).slice(0, -2));
+            processData(json);
+        })
+        .catch(() => showStatus(true, '⚠ Error loading data. Check sheet permissions.'));
+});
+
+function processData(json) {
+    const rows = json.table.rows;
+
+    // Populate block dropdown
+    const blockSet = new Set();
+
+    allResidents = rows
+        .map(row => {
+            const rawFlat  = row.c[6] ? row.c[6].v : '';
+            const flatNorm = normFlat(rawFlat);
+            const block    = row.c[5] ? row.c[5].v?.toString().trim() : '';
+            if (block) blockSet.add(block);
+
+            return {
+                timestamp: row.c[0] ? (row.c[0].f || row.c[0].v) : '',
+                name:      row.c[3] ? row.c[3].v?.toString().trim() : '',
+                phone:     row.c[4] ? row.c[4].v?.toString().trim() : '',
+                block,
+                flat:      flatNorm,
+                resType:   row.c[7] ? row.c[7].v?.toString().trim() : '',
+                vehicle:   row.c[8] ? row.c[8].v?.toString().trim() : '',
+                vType:     row.c[9] ? row.c[9].v?.toString().trim() : '',
+            };
+        })
+        .filter(r => r.name);  // skip completely empty rows
+
+    // Fill block select
+    const blkSel = document.getElementById('filter-block');
+    [...blockSet].sort((a,b) => {
+        const na = parseInt(a.replace(/\D/g,''), 10);
+        const nb = parseInt(b.replace(/\D/g,''), 10);
+        return na - nb;
+    }).forEach(b => {
+        const o = document.createElement('option');
+        o.value = b; o.textContent = b;
+        blkSel.appendChild(o);
+    });
+
+    showStatus(false);
+}
+
+// ─────────────────────────────────────────────────────────────
+// SEARCH TRIGGER — only runs when user requests
+// ─────────────────────────────────────────────────────────────
+function triggerSearch() {
+    const query   = document.getElementById('search-input').value.trim().toLowerCase();
+    const block   = document.getElementById('filter-block').value;
+    const resType = document.getElementById('filter-type').value;
+
+    // Must have at least one search criterion
+    if (!query && !block && !resType) {
+        showPrompt(true);
+        document.getElementById('results-count').classList.add('hidden');
+        document.getElementById('results-container').innerHTML = '';
+        document.getElementById('no-results').classList.add('hidden');
+        return;
+    }
+
+    showPrompt(false);
+    searchDone = true;
+
+    const filtered = allResidents.filter(r => {
+        const matchQ = !query || (
+            r.name.toLowerCase().includes(query)         ||
+            r.block.toLowerCase().includes(query)        ||
+            r.flat.toLowerCase().includes(query)         ||
+            r.phone.toString().includes(query)           ||
+            r.vehicle.toLowerCase().includes(query)      ||
+            r.resType.toLowerCase().includes(query)
+        );
+        const matchB = !block || r.block === block;
+        const matchT = !resType || r.resType === resType;
+        return matchQ && matchB && matchT;
+    });
+
+    displayResults(filtered);
+}
+
+function clearAll() {
+    document.getElementById('search-input').value = '';
+    document.getElementById('filter-block').value = '';
+    document.getElementById('filter-type').value  = '';
+    showPrompt(true);
+    document.getElementById('results-count').classList.add('hidden');
+    document.getElementById('results-container').innerHTML = '';
+    document.getElementById('no-results').classList.add('hidden');
+}
+
+// Enter key
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('search-input').addEventListener('keydown', e => {
+        if (e.key === 'Enter') triggerSearch();
+    });
+});
+
+// ─────────────────────────────────────────────────────────────
+// DISPLAY
+// ─────────────────────────────────────────────────────────────
+function displayResults(data) {
+    const container = document.getElementById('results-container');
+    const countDiv  = document.getElementById('results-count');
+    const noRes     = document.getElementById('no-results');
+
+    container.innerHTML = '';
+    noRes.classList.add('hidden');
+
+    countDiv.classList.remove('hidden');
+    document.getElementById('count-text').textContent =
+        `${data.length} record${data.length !== 1 ? 's' : ''} found`;
+
+    if (data.length === 0) {
+        noRes.classList.remove('hidden');
+        return;
+    }
+
+    data.forEach(item => {
+        const card   = document.createElement('div');
+        card.className = 'res-card bg-white rounded-xl border border-gray-200 p-5 flex flex-col justify-between';
+
+        const floor  = floorLabel(item.flat);
+        const isGF   = GF_FLATS.includes(item.flat);
+        const plate  = cleanPlate(item.vehicle);
+        const isOwner = item.resType.toLowerCase().includes('owner');
+
+        // Build vehicle section
+        let vehicleHTML = '';
+        if (plate) {
+            const plates = plate.split(/[,;\/\s]+/).filter(p => p.length > 2);
+            vehicleHTML = `
+                <div class="flex items-start gap-1.5 mt-1.5 flex-wrap">
+                    <span class="text-xs text-gray-400 font-medium mt-0.5">Vehicle:</span>
+                    ${plates.map(p => `<span class="badge-vehicle text-[10px] font-mono font-bold px-2 py-0.5 rounded">${p}</span>`).join('')}
+                    ${item.vType ? `<span class="text-[10px] text-gray-400 mt-0.5">(${item.vType})</span>` : ''}
+                </div>`;
         }
 
-        function processGoogleData(json) {
-            const rows = json.table.rows;
-            
-            // Map table values precisely back to labels
-            allResidents = rows.map(row => {
-                return {
-                    timestamp: row.c[0] ? row.c[0].f || row.c[0].v : '',
-                    name: row.c[3] ? row.c[3].v : 'N/A',
-                    phone: row.c[4] ? row.c[4].v : 'N/A',
-                    block: row.c[5] ? row.c[5].v : 'N/A',
-                    flat: row.c[6] ? row.c[6].v : 'N/A',
-                    resType: row.c[7] ? row.c[7].v : 'N/A',
-                    vehicle: row.c[8] ? row.c[8].v : 'N/A',
-                    vType: row.c[9] ? row.c[9].v : 'N/A'
-                };
-            });
+        // Floor pill
+        const floorPill = floor
+            ? `<span class="chip-floor text-[9px] font-semibold px-2 py-0.5 rounded-full ml-1">${floor}</span>`
+            : '';
 
-            showStatus(false);
-            // Default show all on startup up to a sensible desktop view limit
-            displayResults(allResidents);
-        }
+        // GF badge
+        const gfBadge = isGF
+            ? `<span class="gf-badge text-[9px] font-semibold px-2 py-0.5 rounded ml-1">Ground Floor</span>`
+            : '';
 
-        function filterData() {
-            const query = document.getElementById('search-input').value.toLowerCase().trim();
-            if (!query) {
-                displayResults(allResidents);
-                return;
-            }
-
-            const filtered = allResidents.filter(item => {
-                return (
-                    item.name.toLowerCase().includes(query) ||
-                    item.block.toLowerCase().includes(query) ||
-                    item.flat.toString().includes(query) ||
-                    item.vehicle.toLowerCase().includes(query) ||
-                    item.phone.toString().includes(query)
-                );
-            });
-
-            displayResults(filtered);
-        }
-
-        // Attach listener for real-time search trigger on pressing Enter
-        document.getElementById('search-input').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') filterData();
-        });
-
-        function displayResults(data) {
-            const container = document.getElementById('results-container');
-            const countLabel = document.getElementById('results-count');
-            container.innerHTML = '';
-            
-            countLabel.classList.remove('hidden');
-            countLabel.innerText = `Showing ${data.length} records found`;
-
-            if (data.length === 0) {
-                container.innerHTML = `
-                    <div class="col-span-full bg-white p-8 text-center rounded-lg border border-gray-200 text-gray-500 font-medium">
-                        No matches found. Try matching specific names or block numbers.
-                    </div>`;
-                return;
-            }
-
-            data.forEach(item => {
-                const card = document.createElement('div');
-                card.className = "bg-white p-5 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow flex flex-col justify-between";
-                
-                card.innerHTML = `
-                    <div>
-                        <div class="flex justify-between items-start border-b border-gray-100 pb-2 mb-3">
-                            <div>
-                                <h3 class="text-lg font-bold text-gray-800">${item.name}</h3>
-                                <p class="text-xs text-blue-600 font-semibold bg-blue-50 px-2 py-0.5 mt-1 inline-block rounded">${item.resType}</p>
-                            </div>
-                            <div class="text-right">
-                                <span class="text-sm font-bold text-gray-900 bg-gray-100 px-2.5 py-1 rounded block">
-                                    ${item.block} - ${item.flat}
-                                </span>
-                            </div>
-                        </div>
-                        
-                        <div class="space-y-1 text-sm text-gray-600">
-                            <div><span class="font-medium text-gray-400">WhatsApp:</span> ${item.phone}</div>
-                            <div><span class="font-medium text-gray-400">Vehicle(s):</span> <span class="uppercase font-mono text-gray-800">${item.vehicle || 'None Listed'}</span></div>
-                            <div><span class="font-medium text-gray-400">Vehicle Type:</span> ${item.vType || 'N/A'}</div>
+        card.innerHTML = `
+            <div>
+                <!-- Card header -->
+                <div class="flex justify-between items-start pb-3 mb-3 border-b border-gray-100">
+                    <div class="flex-1 min-w-0 pr-2">
+                        <h3 class="text-base font-bold text-gray-900 leading-tight">${escHtml(item.name)}</h3>
+                        <div class="flex flex-wrap items-center gap-1 mt-1.5">
+                            <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full ${isOwner ? 'badge-owner' : 'badge-tenant'}">
+                                ${escHtml(item.resType) || '—'}
+                            </span>
+                            <span class="chip-verified text-[9px] font-semibold px-2 py-0.5 rounded-full">✓ Verified</span>
                         </div>
                     </div>
-                    <div class="text-[10px] text-gray-400 text-right mt-4 border-t border-gray-50 pt-1">
-                        Verified: ${item.timestamp}
+                    <!-- Block & Flat badge -->
+                    <div class="text-center flex-shrink-0">
+                        <span class="badge-block text-xs font-bold px-3 py-1.5 rounded-lg block text-center">
+                            ${escHtml(item.block)} &ndash; ${item.flat || '—'}
+                        </span>
+                        ${floorPill}
+                        ${!floorPill && isGF ? gfBadge : ''}
                     </div>
-                `;
-                container.appendChild(card);
-            });
-        }
-    </script>
+                </div>
+
+                <!-- Details -->
+                <div class="space-y-2 text-sm">
+                    ${item.phone ? `
+                    <div class="flex items-center gap-2">
+                        <svg class="w-3.5 h-3.5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24 11.47 11.47 0 003.6.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11.47 11.47 0 00.57 3.6 1 1 0 01-.25 1z"/>
+                        </svg>
+                        <span class="text-gray-700 font-mono text-xs">${escHtml(item.phone)}</span>
+                        <span class="text-[9px] text-green-600 bg-green-50 px-1.5 py-0.5 rounded">WhatsApp</span>
+                    </div>` : ''}
+
+                    ${vehicleHTML}
+                </div>
+            </div>
+
+            <!-- Footer timestamp -->
+            <div class="text-[9px] text-gray-300 text-right mt-4 pt-2 border-t border-gray-50">
+                Submitted: ${escHtml(String(item.timestamp || '—'))}
+            </div>
+        `;
+
+        container.appendChild(card);
+    });
+}
+
+// ─────────────────────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────────────────────
+function showStatus(show, text = '') {
+    const c = document.getElementById('status-container');
+    document.getElementById('status-text').textContent = text;
+    c.classList.toggle('hidden', !show);
+}
+
+function showPrompt(show) {
+    document.getElementById('prompt-msg').classList.toggle('hidden', !show);
+}
+
+function escHtml(s) {
+    return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
 </body>
 </html>
