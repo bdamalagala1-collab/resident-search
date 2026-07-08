@@ -1,5 +1,21 @@
-<!DOCTYPE html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>MBDAAOWA</title></head><body><h2>MBDAAOWA Resident Search</h2><input id='q'><button onclick='s()'>Search</button><div id='o'></div><script>
-const SHEET_ID='1QQ6lkJAO2oZprVqUWPyV5S4ouROkoxAJuHg_p287a14',SHEET='Form Responses 1';
-fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET)}`).then(r=>r.text()).then(t=>{let j=JSON.parse(t.substring(47).slice(0,-2));window.d=(j.table.rows||[]).map(r=>({n:r.c[3]?.v||'',p:r.c[4]?.v||'',b:r.c[5]?.v||'',f:r.c[6]?.v||'',t:r.c[7]?.v||'',v:r.c[8]?.v||''}));});
-function s(){let q=document.getElementById('q').value.toLowerCase();document.getElementById('o').innerHTML=(window.d||[]).filter(x=>Object.values(x).join(' ').toLowerCase().includes(q)).map(x=>`<div><b>${x.n}</b> ${x.b}${x.f}<br>${x.p}<br>${x.v}</div><hr>`).join('')||'No results';}
-</script></body></html>
+<select id="blockFilter" onchange="search()">
+    <option value="">All Blocks</option>
+    <option>B1</option>
+    <option>B2</option>
+    <option>B3</option>
+    <option>B4</option>
+    <option>B5</option>
+    <option>B6</option>
+    <option>B7</option>
+    <option>B8</option>
+    <option>B9</option>
+    <option>B10</option>
+    <option>B11</option>
+    <option>B12</option>
+    <option>B13</option>
+    <option>B14</option>
+    <option>B15</option>
+    <option>B16</option>
+    <option>B17</option>
+    <option>B18</option>
+</select>
