@@ -1,21 +1,1118 @@
-<select id="blockFilter" onchange="search()">
-    <option value="">All Blocks</option>
-    <option>B1</option>
-    <option>B2</option>
-    <option>B3</option>
-    <option>B4</option>
-    <option>B5</option>
-    <option>B6</option>
-    <option>B7</option>
-    <option>B8</option>
-    <option>B9</option>
-    <option>B10</option>
-    <option>B11</option>
-    <option>B12</option>
-    <option>B13</option>
-    <option>B14</option>
-    <option>B15</option>
-    <option>B16</option>
-    <option>B17</option>
-    <option>B18</option>
-</select>
+bash
+python3 << 'PYEOF'
+HTML = r'''<!DOCTYPE html>
+<html lang="kn" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#7f1d1d">
+<title>MBDAAOWA — ನಿವಾಸಿ ಹುಡುಕಾಟ</title>
+<style>
+/* ════════════════════════════════════════
+   VARIABLES — Light & Dark
+════════════════════════════════════════ */
+:root {
+  --bg:          #f4f5f7;
+  --surface:     #ffffff;
+  --surface2:    #f9fafb;
+  --border:      #e5e7eb;
+  --border2:     #d1d5db;
+  --text:        #111827;
+  --text2:       #374151;
+  --text3:       #6b7280;
+  --text4:       #9ca3af;
+  --red:         #7f1d1d;
+  --red2:        #991b1b;
+  --red3:        #fef2f2;
+  --red-text:    #7f1d1d;
+  --blue:        #1e40af;
+  --blue-bg:     #dbeafe;
+  --green:       #166534;
+  --green-bg:    #dcfce7;
+  --amber:       #92400e;
+  --amber-bg:    #fef3c7;
+  --purple:      #5b21b6;
+  --purple-bg:   #ede9fe;
+  --teal:        #0f766e;
+  --teal-bg:     #ccfbf1;
+  --shadow:      0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.05);
+  --shadow-md:   0 4px 12px rgba(0,0,0,.10), 0 2px 4px rgba(0,0,0,.05);
+  --radius:      10px;
+  --radius-lg:   14px;
+}
+[data-theme="dark"] {
+  --bg:          #0f1117;
+  --surface:     #1a1d24;
+  --surface2:    #23262f;
+  --border:      #2d3139;
+  --border2:     #3d4149;
+  --text:        #f1f5f9;
+  --text2:       #cbd5e1;
+  --text3:       #94a3b8;
+  --text4:       #64748b;
+  --red:         #ef4444;
+  --red2:        #f87171;
+  --red3:        #2d1515;
+  --red-text:    #fca5a5;
+  --blue:        #60a5fa;
+  --blue-bg:     #1e3a5f;
+  --green:       #4ade80;
+  --green-bg:    #14532d;
+  --amber:       #fbbf24;
+  --amber-bg:    #451a03;
+  --purple:      #a78bfa;
+  --purple-bg:   #2e1065;
+  --teal:        #2dd4bf;
+  --teal-bg:     #042f2e;
+  --shadow:      0 1px 3px rgba(0,0,0,.4);
+  --shadow-md:   0 4px 12px rgba(0,0,0,.5);
+}
+
+/* ════════════════════════════════════════
+   RESET & BASE
+════════════════════════════════════════ */
+*, *::before, *::after {
+  box-sizing: border-box; margin: 0; padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+html { scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui,
+    "Noto Sans Kannada", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  min-height: 100vh;
+  transition: background .2s, color .2s;
+}
+
+/* ════════════════════════════════════════
+   HEADER
+════════════════════════════════════════ */
+.hdr {
+  background: linear-gradient(135deg, #6b1111 0%, #7f1d1d 40%, #1e3a5f 100%);
+  color: #fff;
+  position: sticky; top: 0; z-index: 200;
+  box-shadow: 0 2px 16px rgba(0,0,0,.35);
+}
+.hdr-inner {
+  max-width: 960px; margin: 0 auto;
+  padding: 11px 14px;
+  display: flex; align-items: center; gap: 0;
+}
+.hdr-text { flex: 1; min-width: 0; }
+.hdr-kn {
+  font-size: 14px; font-weight: 700; line-height: 1.3;
+  letter-spacing: .15px; color: #fff;
+}
+.hdr-en {
+  font-size: 11px; font-weight: 600;
+  color: rgba(255,255,255,.8);
+  margin-top: 2px; line-height: 1.3;
+}
+.hdr-addr {
+  font-size: 9px; color: rgba(255,255,255,.55);
+  margin-top: 3px; line-height: 1.55;
+}
+.hdr-right {
+  display: flex; align-items: center; gap: 8px; flex-shrink: 0; margin-left: 12px;
+}
+.hdr-stat {
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 9px; padding: 5px 10px;
+  text-align: center; display: none;
+}
+@media(min-width:440px){ .hdr-stat { display: block; } }
+.hdr-stat .sn { font-size: 15px; font-weight: 700; color: #fff; line-height: 1; }
+.hdr-stat .sl { font-size: 8.5px; color: rgba(255,255,255,.6); display: block; margin-top: 1px; }
+.dark-btn {
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.2);
+  color: #fff; border-radius: 8px;
+  width: 34px; height: 34px;
+  cursor: pointer; font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: background .15s;
+}
+.dark-btn:hover { background: rgba(255,255,255,.2); }
+
+/* ════════════════════════════════════════
+   MAIN WRAPPER
+════════════════════════════════════════ */
+.main { max-width: 960px; margin: 0 auto; padding: 14px 12px 48px; }
+
+/* ════════════════════════════════════════
+   STATS BAR
+════════════════════════════════════════ */
+.stats { display: flex; gap: 7px; overflow-x: auto; scrollbar-width: none; margin-bottom: 12px; }
+.stats::-webkit-scrollbar { display: none; }
+.sc {
+  flex-shrink: 0; background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 8px 12px; text-align: center;
+  min-width: 74px; box-shadow: var(--shadow);
+}
+.sc .v { font-size: 18px; font-weight: 700; line-height: 1; }
+.sc .l { font-size: 9px; color: var(--text4); margin-top: 2px; font-weight: 500; }
+.v-red    { color: var(--red); }
+.v-blue   { color: var(--blue); }
+.v-green  { color: var(--green); }
+.v-amber  { color: var(--amber); }
+.v-purple { color: var(--purple); }
+
+/* ════════════════════════════════════════
+   SEARCH CARD
+════════════════════════════════════════ */
+.scard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 14px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow);
+}
+.stitle {
+  font-size: 11px; font-weight: 600; color: var(--text4);
+  text-transform: uppercase; letter-spacing: .7px;
+  margin-bottom: 10px; display: flex; align-items: center; gap: 5px;
+}
+/* Main search input row */
+.srow { display: flex; gap: 7px; margin-bottom: 10px; }
+.srow input {
+  flex: 1; padding: 10px 13px;
+  border: 1.5px solid var(--border2);
+  border-radius: var(--radius);
+  font-size: 14px; color: var(--text);
+  background: var(--surface2);
+  transition: border-color .15s, box-shadow .15s;
+  font-family: inherit;
+}
+.srow input:focus {
+  outline: none; border-color: var(--red);
+  box-shadow: 0 0 0 3px rgba(127,29,29,.12);
+  background: var(--surface);
+}
+.srow input::placeholder { color: var(--text4); }
+.btn-go {
+  background: var(--red); color: #fff;
+  border: none; padding: 10px 18px;
+  border-radius: var(--radius);
+  font-size: 13px; font-weight: 600;
+  cursor: pointer; white-space: nowrap;
+  display: flex; align-items: center; gap: 5px;
+  transition: background .15s, transform .1s;
+  font-family: inherit;
+}
+.btn-go:hover { background: #6b1111; }
+.btn-go:active { transform: scale(.97); }
+
+/* Filter grid */
+.fgrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px; margin-bottom: 8px;
+}
+@media(min-width:520px) {
+  .fgrid { grid-template-columns: repeat(4, 1fr); }
+}
+.fsel {
+  font-size: 12px; padding: 8px 10px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface2);
+  color: var(--text2);
+  cursor: pointer;
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236b7280'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  padding-right: 26px; width: 100%;
+  font-family: inherit;
+}
+.fsel:focus { outline: none; border-color: var(--red); }
+[data-theme="dark"] .fsel {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2394a3b8'/%3E%3C/svg%3E");
+}
+
+/* Action row */
+.arow {
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 10px;
+}
+.btn-clear {
+  font-size: 11.5px; padding: 7px 13px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface2);
+  color: var(--text3);
+  cursor: pointer; font-weight: 500;
+  font-family: inherit; transition: background .12s;
+}
+.btn-clear:hover { background: var(--border); }
+.res-summary {
+  font-size: 12px; color: var(--text3); margin-left: auto;
+}
+.res-summary b { color: var(--red-text); font-size: 13px; }
+
+/* Quick pills */
+.qsection { margin-top: 2px; }
+.qlabel { font-size: 10px; color: var(--text4); font-weight: 500; margin-bottom: 5px; }
+.qpills { display: flex; gap: 4px; flex-wrap: wrap; }
+.pill {
+  font-size: 11px; padding: 4px 10px;
+  border-radius: 20px;
+  border: 1.5px solid var(--border);
+  background: var(--surface2);
+  color: var(--text3);
+  cursor: pointer; transition: all .12s; font-weight: 500;
+  font-family: inherit;
+}
+.pill:hover, .pill.on {
+  background: var(--red); color: #fff; border-color: var(--red);
+}
+
+.hint {
+  font-size: 10px; color: var(--text4);
+  margin-top: 10px; display: flex; align-items: center; gap: 4px;
+}
+
+/* ════════════════════════════════════════
+   LOADER
+════════════════════════════════════════ */
+.loader-wrap {
+  display: none; justify-content: center;
+  align-items: center; padding: 44px; gap: 10px;
+}
+.spinner {
+  width: 24px; height: 24px;
+  border: 3px solid var(--border);
+  border-top-color: var(--red);
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loader-txt { font-size: 13px; color: var(--text4); }
+
+/* ════════════════════════════════════════
+   PROMPT (initial state)
+════════════════════════════════════════ */
+.prompt {
+  text-align: center; padding: 52px 24px;
+}
+.prompt svg { margin: 0 auto 12px; opacity: .2; }
+.prompt h3 { font-size: 14px; font-weight: 600; color: var(--text3); margin-bottom: 4px; }
+.prompt p  { font-size: 12px; color: var(--text4); }
+
+/* ════════════════════════════════════════
+   RESULTS HEADER
+════════════════════════════════════════ */
+.rh {
+  display: none; justify-content: space-between;
+  align-items: center; margin-bottom: 10px;
+}
+.rh.on { display: flex; }
+.sort-btn {
+  font-size: 11px; color: var(--text4);
+  padding: 5px 10px; border: 1px solid var(--border);
+  border-radius: 6px; background: var(--surface);
+  cursor: pointer; font-family: inherit;
+}
+
+/* ════════════════════════════════════════
+   RESULTS GRID
+════════════════════════════════════════ */
+.rgrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+@media(min-width:600px) {
+  .rgrid { grid-template-columns: 1fr 1fr; }
+}
+
+/* ════════════════════════════════════════
+   RESIDENT CARD
+════════════════════════════════════════ */
+.rcard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: box-shadow .15s, transform .15s, border-color .15s;
+}
+.rcard:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+  border-color: var(--border2);
+}
+
+/* Card top colour strip by type */
+.rcard.owner  { border-top: 3px solid #1e40af; }
+.rcard.tenant { border-top: 3px solid #92400e; }
+.rcard.other  { border-top: 3px solid var(--red); }
+
+.ch {
+  display: flex; justify-content: space-between;
+  align-items: flex-start;
+  padding: 12px 14px 10px;
+  border-bottom: 1px solid var(--border);
+}
+.rname {
+  font-size: 15px; font-weight: 700;
+  color: var(--text); line-height: 1.3;
+  word-break: break-word;
+}
+.rbadges {
+  display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px;
+}
+.badge {
+  display: inline-flex; align-items: center; gap: 2px;
+  font-size: 10px; font-weight: 600;
+  padding: 2px 7px; border-radius: 20px;
+}
+.b-owner   { background: var(--blue-bg);   color: var(--blue); }
+.b-tenant  { background: var(--amber-bg);  color: var(--amber); }
+.b-ok      { background: var(--green-bg);  color: var(--green); }
+.b-floor   { background: var(--purple-bg); color: var(--purple); }
+.b-gf      { background: var(--teal-bg);   color: var(--teal); border: 1px solid; }
+
+/* Flat chip */
+.flat-chip {
+  text-align: center; flex-shrink: 0; margin-left: 8px;
+}
+.fc-inner {
+  display: inline-block;
+  background: var(--red);
+  color: #fff;
+  font-size: 13px; font-weight: 700;
+  padding: 7px 11px; border-radius: 9px;
+  font-family: "SF Mono", SFMono-Regular, Menlo, monospace;
+  white-space: nowrap; min-width: 62px; text-align: center;
+}
+.fc-inner small {
+  font-size: 9px; display: block; opacity: .8;
+  margin-top: 1px; font-weight: 400; font-family: inherit;
+}
+
+/* Card body */
+.cb { padding: 10px 14px 12px; }
+.crow {
+  display: flex; align-items: flex-start;
+  gap: 8px; margin-bottom: 7px;
+}
+.crow:last-child { margin-bottom: 0; }
+.cicon {
+  flex-shrink: 0; width: 15px; height: 15px;
+  margin-top: 1px; color: var(--text4);
+}
+.clabel { font-size: 10.5px; color: var(--text4); font-weight: 500; margin-bottom: 1px; }
+.cval   { font-size: 12.5px; color: var(--text2); font-weight: 500; line-height: 1.4; }
+.cval.mono {
+  font-family: "SF Mono", SFMono-Regular, Menlo, monospace;
+  font-size: 12px; letter-spacing: .4px;
+}
+.cval.muted { color: var(--text4); font-style: italic; font-size: 12px; }
+
+/* Plates */
+.plates { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 3px; }
+.plate {
+  font-family: "SF Mono", monospace;
+  font-size: 11px; font-weight: 700;
+  padding: 3px 8px; border-radius: 5px;
+  border: 1.5px solid var(--border2);
+  background: var(--surface2);
+  color: var(--text); letter-spacing: .5px;
+  text-transform: uppercase;
+}
+
+/* Card footer */
+.cf {
+  padding: 6px 14px;
+  background: var(--surface2);
+  border-top: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.cts { font-size: 9.5px; color: var(--text4); }
+
+/* ════════════════════════════════════════
+   NO RESULT
+════════════════════════════════════════ */
+.nores {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 44px 24px; text-align: center;
+  grid-column: 1 / -1;
+}
+.nores svg { margin: 0 auto 10px; opacity: .25; }
+.nores p { font-size: 13px; color: var(--text3); margin-top: 6px; }
+.nores .sub { font-size: 11px; color: var(--text4); margin-top: 4px; }
+
+/* ════════════════════════════════════════
+   FOOTER
+════════════════════════════════════════ */
+footer {
+  text-align: center;
+  padding: 16px 16px 40px;
+  font-size: 10px; color: var(--text4);
+  max-width: 960px; margin: 0 auto;
+  line-height: 1.7;
+  border-top: 1px solid var(--border);
+  margin-top: 20px;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════ HEADER ═══════ -->
+<header class="hdr">
+  <div class="hdr-inner">
+    <div class="hdr-text">
+      <div class="hdr-kn">ಮಾಲಗಳ ಬಿ.ಡಿ.ಎ. ಅಪಾರ್ಟ್‌ಮೆಂಟ್ ಮಾಲೀಕರ ಕ್ಷೇಮಾಭಿವೃದ್ಧಿ ಸಂಘ (ರಿ.)</div>
+      <div class="hdr-en">MALAGALA BDA APARTMENTS OWNERS WELFARE ASSOCIATION ®</div>
+      <div class="hdr-addr">
+        Reg. No: SOR/RJR/S-91/2016-17 &nbsp;·&nbsp; Survey No: 53 &amp; 36, Malagala, Panchasheela Nagar<br>
+        Near Moodalapalya Circle, Nagarabhavi Post, Bangalore – 560 072
+      </div>
+    </div>
+    <div class="hdr-right">
+      <div class="hdr-stat" id="hdr-stat" style="display:none">
+        <div class="sn" id="hst-n">—</div>
+        <span class="sl">Responses</span>
+      </div>
+      <button class="dark-btn" id="dark-btn" onclick="toggleDark()" title="Toggle dark mode" aria-label="Toggle dark mode">🌙</button>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════ MAIN ═══════ -->
+<div class="main">
+
+  <!-- Stats -->
+  <div class="stats" id="stats" style="display:none">
+    <div class="sc"><div class="v v-blue"  id="st-t">—</div><div class="l">Total</div></div>
+    <div class="sc"><div class="v v-green" id="st-o">—</div><div class="l">Owners</div></div>
+    <div class="sc"><div class="v v-amber" id="st-r">—</div><div class="l">Tenants</div></div>
+    <div class="sc"><div class="v v-red"   id="st-v">—</div><div class="l">Vehicles</div></div>
+    <div class="sc"><div class="v v-purple"id="st-b">—</div><div class="l">Blocks</div></div>
+  </div>
+
+  <!-- Search card -->
+  <div class="scard">
+    <div class="stitle">
+      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"
+           stroke-linecap="round" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      ನಿವಾಸಿ ಹುಡುಕಾಟ &nbsp;/&nbsp; Resident Search
+    </div>
+
+    <!-- Universal search bar -->
+    <div class="srow">
+      <input type="search" id="q" inputmode="search"
+        placeholder="ಹೆಸರು · ಮೊಬೈಲ್ · ವಾಹನ ನಂಬರ್ · Block · Flat…"
+        autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+      <button class="btn-go" id="btn-go" onclick="doSearch()">
+        <svg width="13" height="13" fill="none" stroke="currentColor"
+             stroke-width="2.5" stroke-linecap="round" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        Search
+      </button>
+    </div>
+
+    <!-- 4 filter dropdowns -->
+    <div class="fgrid">
+      <select class="fsel" id="f-block" onchange="doSearch()">
+        <option value="">All Blocks (B1–B18)</option>
+      </select>
+      <select class="fsel" id="f-flat" onchange="doSearch()">
+        <option value="">All Flats</option>
+        <optgroup label="Ground Floor">
+          <option value="001">001 — Ground Floor</option>
+          <option value="002">002 — Ground Floor</option>
+          <option value="003">003 — Ground Floor</option>
+          <option value="004">004 — Ground Floor</option>
+        </optgroup>
+        <optgroup label="1st Floor">
+          <option value="101">101 — 1st Floor</option>
+          <option value="102">102 — 1st Floor</option>
+          <option value="103">103 — 1st Floor</option>
+          <option value="104">104 — 1st Floor</option>
+        </optgroup>
+        <optgroup label="2nd Floor">
+          <option value="201">201 — 2nd Floor</option>
+          <option value="202">202 — 2nd Floor</option>
+          <option value="203">203 — 2nd Floor</option>
+          <option value="204">204 — 2nd Floor</option>
+        </optgroup>
+        <optgroup label="3rd Floor">
+          <option value="301">301 — 3rd Floor</option>
+          <option value="302">302 — 3rd Floor</option>
+          <option value="303">303 — 3rd Floor</option>
+          <option value="304">304 — 3rd Floor</option>
+        </optgroup>
+      </select>
+      <select class="fsel" id="f-type" onchange="doSearch()">
+        <option value="">Owner / Tenant</option>
+        <option value="owner">🏠 Owner</option>
+        <option value="tenant">🏘 Tenant</option>
+      </select>
+      <select class="fsel" id="f-veh" onchange="doSearch()">
+        <option value="">Any Vehicle</option>
+        <option value="has">Has Vehicle</option>
+        <option value="none">No Vehicle</option>
+        <option value="2w">🛵 2-Wheeler</option>
+        <option value="4w">🚗 4-Wheeler</option>
+        <option value="both">Both Types</option>
+      </select>
+    </div>
+
+    <!-- Action row -->
+    <div class="arow">
+      <button class="btn-clear" onclick="clearAll()">✕ &nbsp;Clear Search</button>
+      <div class="res-summary" id="res-sum" style="display:none"></div>
+    </div>
+
+    <!-- Quick block pills -->
+    <div class="qsection">
+      <div class="qlabel">Quick block filter:</div>
+      <div class="qpills" id="qpills"></div>
+    </div>
+
+    <p class="hint">
+      <svg width="11" height="11" fill="none" stroke="currentColor"
+           stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/>
+      </svg>
+      Press Enter or tap Search · Results shown only after searching
+    </p>
+  </div>
+
+  <!-- Loader -->
+  <div class="loader-wrap" id="loader">
+    <div class="spinner"></div>
+    <span class="loader-txt" id="loader-txt">Loading resident directory…</span>
+  </div>
+
+  <!-- Prompt -->
+  <div class="prompt" id="prompt" style="display:none">
+    <svg width="56" height="56" fill="none" stroke="currentColor"
+         stroke-width="1.2" viewBox="0 0 24 24">
+      <circle cx="11" cy="11" r="8"/>
+      <path stroke-linecap="round" d="m21 21-4.35-4.35"/>
+    </svg>
+    <h3>ಹುಡುಕಾಟ ಮಾಡಿ / Search Residents</h3>
+    <p>ಹೆಸರು, ಬ್ಲಾಕ್, ಫ್ಲಾಟ್, ಮೊಬೈಲ್ ಅಥವಾ ವಾಹನ ನಂಬರ್ ನಮೂದಿಸಿ</p>
+    <p style="margin-top:4px">Enter name, block, flat, mobile or vehicle number above</p>
+  </div>
+
+  <!-- Results header -->
+  <div class="rh" id="rh">
+    <span id="rc" style="font-size:12px;color:var(--text3)"></span>
+    <button class="sort-btn" onclick="toggleSort()">
+      ⇅ Sort: <span id="sort-lbl">Name A–Z</span>
+    </button>
+  </div>
+
+  <!-- Results grid -->
+  <div class="rgrid" id="grid"></div>
+
+</div><!-- /main -->
+
+<footer>
+  <strong style="color:var(--red-text)">MBDAAOWA</strong> &nbsp;·&nbsp;
+  ಮಾಲಗಳ ಬಿ.ಡಿ.ಎ. ಅಪಾರ್ಟ್‌ಮೆಂಟ್ ಮಾಲೀಕರ ಕ್ಷೇಮಾಭಿವೃದ್ಧಿ ಸಂಘ (ರಿ.) &nbsp;·&nbsp;
+  Reg. SOR/RJR/S-91/2016-17<br>
+  Survey No: 53 &amp; 36, Malagala, Panchasheela Nagar, Near Moodalapalya Circle,
+  Nagarabhavi Post, Bangalore – 560 072<br>
+  <span style="color:var(--text4)">
+    Read-only resident verification portal &nbsp;·&nbsp;
+    Live data from Google Sheets &nbsp;·&nbsp;
+    For queries contact the Association Secretary
+  </span>
+</footer>
+
+<script>
+/* ════════════════════════════════════════
+   CONFIG
+════════════════════════════════════════ */
+const SHEET_ID = '1QQ6lkJAO2oZprVqUWPyV5S4ouROkoxAJuHg_p287a14';
+const SHEET    = encodeURIComponent('Form Responses 1');
+const URL      = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET}`;
+
+/* ════════════════════════════════════════
+   STATE
+════════════════════════════════════════ */
+let ALL  = [];
+let CUR  = [];
+let SORT = 'name';   // 'name' | 'block' | 'ts'
+let READY = false;
+
+/* ════════════════════════════════════════
+   DARK MODE
+════════════════════════════════════════ */
+function toggleDark() {
+  const isDark = document.documentElement.dataset.theme === 'dark';
+  document.documentElement.dataset.theme = isDark ? 'light' : 'dark';
+  document.getElementById('dark-btn').textContent = isDark ? '🌙' : '☀️';
+  try { localStorage.setItem('mbdaaowa-theme', isDark ? 'light' : 'dark'); } catch(e){}
+}
+(function(){
+  try {
+    const t = localStorage.getItem('mbdaaowa-theme');
+    if (t) {
+      document.documentElement.dataset.theme = t;
+      if (t === 'dark') {
+        const b = document.getElementById('dark-btn');
+        if (b) b.textContent = '☀️';
+      }
+    }
+  } catch(e){}
+})();
+
+/* ════════════════════════════════════════
+   BOOT — fetch data
+════════════════════════════════════════ */
+window.addEventListener('DOMContentLoaded', () => {
+  showLoader(true, 'ಡೇಟಾ ಲೋಡ್ ಆಗುತ್ತಿದೆ… / Loading resident directory…');
+  fetch(URL)
+    .then(r => {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.text();
+    })
+    .then(txt => {
+      // Strip Google's callback wrapper
+      const json = JSON.parse(txt.replace(/^[^{]*/, '').replace(/[^}]*$/, ''));
+      ingest(json);
+    })
+    .catch(err => {
+      showLoader(true,
+        '⚠ ಡೇಟಾ ಲೋಡ್ ಆಗಲಿಲ್ಲ. Google Sheet "Anyone with link → Viewer" ಆಗಿ share ಮಾಡಿ.', true);
+      console.error(err);
+    });
+
+  document.getElementById('q').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doSearch();
+  });
+});
+
+/* ════════════════════════════════════════
+   INGEST
+   Form columns (0-indexed):
+     0 = Timestamp
+     1 = Email (ignored)
+     2 = WA Group / Ref (ignored)
+     3 = Full Name
+     4 = WhatsApp / Mobile
+     5 = Block  (e.g. "B7")
+     6 = Flat   (e.g. "3" or "203")
+     7 = Resident Type (Owner / Tenant)
+     8 = Vehicle Number
+     9 = Vehicle Type
+════════════════════════════════════════ */
+function ingest(json) {
+  const rows = json.table.rows || [];
+
+  ALL = rows.map(row => {
+    const get = i => {
+      if (!row.c || !row.c[i]) return '';
+      const c = row.c[i];
+      // Prefer formatted value (f) for timestamp; raw value (v) otherwise
+      const val = (i === 0 && c.f) ? c.f : c.v;
+      return (val !== null && val !== undefined) ? String(val).trim() : '';
+    };
+
+    const rawBlock = get(5).toUpperCase().replace(/\s/g, '');
+    const rawFlat  = get(6);
+    const flatN    = normFlat(rawFlat, rawBlock);
+    const vRaw     = get(8);
+    const resType  = get(7);
+
+    return {
+      ts:      get(0),
+      name:    get(3),
+      phone:   get(4),
+      block:   rawBlock,
+      flat:    flatN,
+      resType: resType,
+      rtLower: resType.toLowerCase(),
+      vehicle: vRaw,
+      vType:   get(9),
+      plates:  splitPlates(vRaw),
+      // Searchable blob for fast matching
+      blob:    '',
+    };
+  }).filter(r => r.name.length > 0);
+
+  // Pre-compute search blob for each record
+  ALL.forEach(r => {
+    r.blob = [r.name, r.phone, r.block, r.flat,
+              r.vehicle, r.vType, r.resType].join(' ').toLowerCase();
+  });
+
+  // Sort default
+  ALL.sort((a, b) => a.name.localeCompare(b.name));
+
+  buildBlockDropdown();
+  buildQuickPills();
+  renderStats();
+  showLoader(false);
+  showPrompt(true);
+  READY = true;
+}
+
+/* ════════════════════════════════════════
+   BUILD UI
+════════════════════════════════════════ */
+function buildBlockDropdown() {
+  const blocks = uniqueBlocks();
+  const sel = document.getElementById('f-block');
+  blocks.forEach(b => {
+    const o = document.createElement('option');
+    o.value = b; o.textContent = b;
+    sel.appendChild(o);
+  });
+}
+
+function buildQuickPills() {
+  const c = document.getElementById('qpills');
+  c.innerHTML = '';
+  uniqueBlocks().forEach(b => {
+    const p = document.createElement('button');
+    p.className = 'pill'; p.textContent = b; p.type = 'button';
+    p.onclick = () => {
+      document.getElementById('f-block').value = b;
+      document.getElementById('q').value       = '';
+      document.getElementById('f-flat').value  = '';
+      document.getElementById('f-type').value  = '';
+      document.getElementById('f-veh').value   = '';
+      document.querySelectorAll('.pill').forEach(x => x.classList.remove('on'));
+      p.classList.add('on');
+      doSearch();
+    };
+    c.appendChild(p);
+  });
+}
+
+function renderStats() {
+  const n  = ALL.length;
+  const ow = ALL.filter(r => /owner/i.test(r.rtLower)).length;
+  const tn = ALL.filter(r => /tenant/i.test(r.rtLower)).length;
+  const vh = ALL.filter(r => r.plates.length > 0).length;
+  const bl = new Set(ALL.map(r => r.block).filter(Boolean)).size;
+
+  document.getElementById('st-t').textContent = n;
+  document.getElementById('st-o').textContent = ow;
+  document.getElementById('st-r').textContent = tn;
+  document.getElementById('st-v').textContent = vh;
+  document.getElementById('st-b').textContent = bl;
+  document.getElementById('stats').style.display = 'flex';
+
+  const hs = document.getElementById('hdr-stat');
+  document.getElementById('hst-n').textContent = n;
+  hs.style.display = 'block';
+}
+
+/* ════════════════════════════════════════
+   SEARCH
+════════════════════════════════════════ */
+function doSearch() {
+  if (!READY) return;
+
+  const q    = document.getElementById('q').value.trim().toLowerCase();
+  const blk  = document.getElementById('f-block').value;
+  const flt  = document.getElementById('f-flat').value;
+  const typ  = document.getElementById('f-type').value.toLowerCase();
+  const vf   = document.getElementById('f-veh').value;
+
+  const hasAny = q || blk || flt || typ || vf;
+  if (!hasAny) {
+    showPrompt(true);
+    document.getElementById('rh').classList.remove('on');
+    document.getElementById('grid').innerHTML = '';
+    document.getElementById('res-sum').style.display = 'none';
+    return;
+  }
+
+  showPrompt(false);
+
+  // Unmark all pills unless a block pill triggered this
+  // (pills manage their own 'on' class)
+
+  CUR = ALL.filter(r => {
+    // 1. Universal text search (fast blob match)
+    if (q && !r.blob.includes(q)) return false;
+    // 2. Block dropdown
+    if (blk && r.block !== blk) return false;
+    // 3. Flat dropdown
+    if (flt && r.flat !== flt) return false;
+    // 4. Resident type
+    if (typ && !r.rtLower.includes(typ)) return false;
+    // 5. Vehicle filter
+    if (vf === 'has'  && r.plates.length === 0) return false;
+    if (vf === 'none' && r.plates.length > 0)   return false;
+    if (vf === '2w'   && !/2[\s-]?wheel/i.test(r.vType)) return false;
+    if (vf === '4w'   && !/4[\s-]?wheel/i.test(r.vType)) return false;
+    if (vf === 'both' &&
+       !((/2[\s-]?wheel/i.test(r.vType)) && (/4[\s-]?wheel/i.test(r.vType)))) return false;
+    return true;
+  });
+
+  applySortAndRender();
+}
+
+function clearAll() {
+  document.getElementById('q').value       = '';
+  document.getElementById('f-block').value = '';
+  document.getElementById('f-flat').value  = '';
+  document.getElementById('f-type').value  = '';
+  document.getElementById('f-veh').value   = '';
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('on'));
+  showPrompt(true);
+  document.getElementById('rh').classList.remove('on');
+  document.getElementById('grid').innerHTML = '';
+  document.getElementById('res-sum').style.display = 'none';
+  document.getElementById('q').focus();
+}
+
+function toggleSort() {
+  const modes = ['name', 'block', 'ts'];
+  SORT = modes[(modes.indexOf(SORT) + 1) % modes.length];
+  document.getElementById('sort-lbl').textContent =
+    SORT === 'name' ? 'Name A–Z' : SORT === 'block' ? 'Block / Flat' : 'Date';
+  applySortAndRender();
+}
+
+function applySortAndRender() {
+  if (SORT === 'name')
+    CUR.sort((a, b) => a.name.localeCompare(b.name));
+  else if (SORT === 'block')
+    CUR.sort((a, b) => {
+      const nb = x => parseInt(x.replace(/\D/g, '')) || 0;
+      return nb(a.block) - nb(b.block) || a.flat.localeCompare(b.flat);
+    });
+  else
+    CUR.sort((a, b) => b.ts.localeCompare(a.ts));
+  renderGrid();
+}
+
+/* ════════════════════════════════════════
+   RENDER
+════════════════════════════════════════ */
+function renderGrid() {
+  const grid = document.getElementById('grid');
+  const rh   = document.getElementById('rh');
+  const rc   = document.getElementById('rc');
+  const rs   = document.getElementById('res-sum');
+
+  grid.innerHTML = '';
+  rh.classList.add('on');
+
+  const n = CUR.length;
+  rc.textContent = '';
+  rs.innerHTML = `<b>${n}</b> record${n !== 1 ? 's' : ''} found`;
+  rs.style.display = 'block';
+
+  if (n === 0) {
+    grid.innerHTML = `
+      <div class="nores">
+        <svg width="40" height="40" fill="none" stroke="currentColor"
+             stroke-width="1.2" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8"/>
+          <path stroke-linecap="round" d="m21 21-4.35-4.35"/>
+        </svg>
+        <p>ಯಾವುದೇ ದಾಖಲೆ ಕಂಡುಬಂದಿಲ್ಲ / No records found</p>
+        <p class="sub">Try a different name, block, flat number, or vehicle number</p>
+      </div>`;
+    return;
+  }
+
+  // Render up to 100 cards (performance cap)
+  const shown = CUR.slice(0, 100);
+  shown.forEach(r => grid.appendChild(makeCard(r)));
+  if (CUR.length > 100) {
+    const note = document.createElement('p');
+    note.style.cssText = 'text-align:center;font-size:12px;color:var(--text4);grid-column:1/-1;padding:10px';
+    note.textContent = `Showing 100 of ${CUR.length} results. Refine your search for more specific results.`;
+    grid.appendChild(note);
+  }
+}
+
+/* ════════════════════════════════════════
+   MAKE CARD
+════════════════════════════════════════ */
+function makeCard(r) {
+  const div = document.createElement('div');
+  const isOwner  = /owner/i.test(r.rtLower);
+  const isTenant = /tenant/i.test(r.rtLower);
+  div.className = 'rcard ' + (isOwner ? 'owner' : isTenant ? 'tenant' : 'other');
+
+  const isGF    = ['001','002','003','004'].includes(r.flat);
+  const floor   = floorLabel(r.flat);
+  const hasVeh  = r.plates.length > 0;
+
+  // Badges
+  const typeBadge  = r.resType
+    ? `<span class="badge ${isOwner?'b-owner':isTenant?'b-tenant':'b-ok'}">${isOwner?'🏠':'🏘'} ${esc(r.resType)}</span>`
+    : '';
+  const floorBadge = floor
+    ? `<span class="badge ${isGF ? 'b-gf' : 'b-floor'}">${floor}</span>`
+    : '';
+
+  // Flat chip
+  const flatChip = `
+    <div class="flat-chip">
+      <div class="fc-inner">
+        ${esc(r.block) || '—'}
+        <small>Flat ${esc(r.flat) || '—'}</small>
+      </div>
+    </div>`;
+
+  // Phone row
+  const phoneRow = r.phone ? `
+    <div class="crow">
+      <svg class="cicon" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+        <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07
+                 A19.5 19.5 0 013 5.18 2 2 0 015 3h3a2 2 0 012 1.72
+                 c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L9.09 10.91
+                 a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45
+                 c.907.339 1.85.573 2.81.7A2 2 0 0122 17z"/>
+      </svg>
+      <div>
+        <div class="clabel">Mobile / WhatsApp</div>
+        <div class="cval mono">${esc(r.phone)}</div>
+      </div>
+    </div>` : '';
+
+  // Vehicle row
+  const vehicleRow = hasVeh ? `
+    <div class="crow">
+      <svg class="cicon" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+        <rect x="1" y="9" width="22" height="9" rx="2"/>
+        <circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/>
+        <path d="M5 9V7a2 2 0 012-2h10a2 2 0 012 2v2"/>
+      </svg>
+      <div>
+        <div class="clabel">Vehicle${r.plates.length > 1 ? 's' : ''}</div>
+        <div class="plates">${r.plates.map(p => `<span class="plate">${esc(p)}</span>`).join('')}</div>
+        ${r.vType ? `<div style="font-size:10px;color:var(--text4);margin-top:3px">${esc(r.vType)}</div>` : ''}
+      </div>
+    </div>` : `
+    <div class="crow">
+      <svg class="cicon" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+           style="opacity:.18">
+        <rect x="1" y="9" width="22" height="9" rx="2"/>
+        <circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/>
+        <path d="M5 9V7a2 2 0 012-2h10a2 2 0 012 2v2"/>
+      </svg>
+      <div>
+        <div class="clabel">Vehicle</div>
+        <div class="cval muted">None registered</div>
+      </div>
+    </div>`;
+
+  div.innerHTML = `
+    <div class="ch">
+      <div style="flex:1;min-width:0;padding-right:8px">
+        <div class="rname">${esc(r.name)}</div>
+        <div class="rbadges">
+          ${typeBadge}
+          <span class="badge b-ok">✓ Verified</span>
+          ${floorBadge}
+        </div>
+      </div>
+      ${flatChip}
+    </div>
+    <div class="cb">
+      ${phoneRow}
+      ${vehicleRow}
+    </div>
+    <div class="cf">
+      <span class="cts">Submitted: ${esc(r.ts ? r.ts.substring(0, 20) : '—')}</span>
+      <span class="badge b-ok" style="font-size:9px">Active</span>
+    </div>`;
+
+  return div;
+}
+
+/* ════════════════════════════════════════
+   UTILS
+════════════════════════════════════════ */
+// Normalise flat number to 3-digit code
+// Handles: "1"-"4" → "001"-"004", "101"-"304" → unchanged
+function normFlat(raw) {
+  if (!raw) return '';
+  const s = raw.toString().trim();
+  // Extract numeric part only
+  const digits = s.replace(/\D/g, '');
+  if (!digits) return s;
+  const n = parseInt(digits, 10);
+  // Ground floor 1-4 → 001-004
+  if (n >= 1 && n <= 4)     return String(n).padStart(3, '0');
+  // Standard 3-digit codes
+  if (n >= 100 && n <= 304) return String(n).padStart(3, '0');
+  return digits.padStart(3, '0');
+}
+
+function floorLabel(flat) {
+  const n = parseInt(flat, 10);
+  if (isNaN(n))              return '';
+  if (n >= 1   && n <= 4)   return 'Ground Floor';
+  if (n >= 101 && n <= 104) return '1st Floor';
+  if (n >= 201 && n <= 204) return '2nd Floor';
+  if (n >= 301 && n <= 304) return '3rd Floor';
+  return '';
+}
+
+function splitPlates(v) {
+  if (!v) return [];
+  const s = v.toString().trim();
+  if (!s || /^(n\/a|na|nil|none|-+)$/i.test(s)) return [];
+  return s.split(/[,;|\/\n\\]+/)
+    .map(p => p.replace(/\s+/g, ' ').trim().toUpperCase())
+    .filter(p => p.length > 2 && !/^(N\/A|NA|NIL|NONE)$/i.test(p));
+}
+
+function uniqueBlocks() {
+  return [...new Set(ALL.map(r => r.block).filter(Boolean))]
+    .sort((a, b) => (parseInt(a.replace(/\D/g,''))||0) - (parseInt(b.replace(/\D/g,''))||0));
+}
+
+function showLoader(show, txt = '', isErr = false) {
+  const w = document.getElementById('loader');
+  w.style.display = show ? 'flex' : 'none';
+  if (show) {
+    const t = document.getElementById('loader-txt');
+    t.textContent = txt;
+    t.style.color = isErr ? '#ef4444' : 'var(--text4)';
+    document.querySelector('.spinner').style.display = isErr ? 'none' : 'block';
+  }
+}
+
+function showPrompt(show) {
+  document.getElementById('prompt').style.display = show ? 'block' : 'none';
+  if (show) {
+    document.getElementById('rh').classList.remove('on');
+    document.getElementById('res-sum').style.display = 'none';
+  }
+}
+
+function esc(s) {
+  return (s || '').toString()
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+</script>
+</body>
+</html>'''
+
+with open('/home/claude/MBDAAOWA_Search_v3.html', 'w', encoding='utf-8') as f:
+    f.write(HTML)
+print(f'Done: {len(HTML):,} chars, {len(HTML.encode()):,} bytes')
+PYEOF
