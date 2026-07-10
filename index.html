@@ -1,5 +1,4 @@
-cat > /home/claude/build_v4.py << 'PYEOF'
-HTML = r'''<!DOCTYPE html>
+'<!DOCTYPE html>
 <html lang="kn" data-theme="light">
 <head>
 <meta charset="UTF-8">
@@ -765,11 +764,3 @@ function showPrompt(show) {
 </script>
 </body>
 </html>'''
-
-with open('/home/claude/MBDAAOWA_Search_v4.html', 'w', encoding='utf-8') as f:
-    f.write(HTML)
-
-size = len(HTML.encode())
-print(f'Done: {size:,} bytes ({size//1024} KB)')
-PYEOF
-python3 /home/claude/build_v4.py
