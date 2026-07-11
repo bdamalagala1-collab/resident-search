@@ -1,4 +1,4 @@
-'<!DOCTYPE html>
+HTML = r'''<!DOCTYPE html>
 <html lang="kn" data-theme="light">
 <head>
 <meta charset="UTF-8">
@@ -12,7 +12,7 @@
   --bg:#f4f5f7;--surface:#fff;--surface2:#f9fafb;
   --border:#e5e7eb;--border2:#d1d5db;
   --text:#111827;--text2:#374151;--text3:#6b7280;--text4:#9ca3af;
-  --red:#7f1d1d;--red2:#991b1b;--red3:#fef2f2;--red-t:#7f1d1d;
+  --red:#7f1d1d;--red2:#991b1b;--red-t:#7f1d1d;
   --blue:#1e40af;--blue-bg:#dbeafe;
   --green:#166534;--green-bg:#dcfce7;
   --amber:#92400e;--amber-bg:#fef3c7;
@@ -26,7 +26,7 @@
   --bg:#0f1117;--surface:#1a1d24;--surface2:#23262f;
   --border:#2d3139;--border2:#3d4149;
   --text:#f1f5f9;--text2:#cbd5e1;--text3:#94a3b8;--text4:#64748b;
-  --red:#ef4444;--red2:#f87171;--red3:#2d1515;--red-t:#fca5a5;
+  --red:#ef4444;--red2:#f87171;--red-t:#fca5a5;
   --blue:#60a5fa;--blue-bg:#1e3a5f;
   --green:#4ade80;--green-bg:#14532d;
   --amber:#fbbf24;--amber-bg:#451a03;
@@ -35,40 +35,33 @@
   --sh:0 1px 3px rgba(0,0,0,.4);--sh-md:0 4px 12px rgba(0,0,0,.5);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html{scroll-behavior:smooth}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,"Noto Sans Kannada",sans-serif;
   background:var(--bg);color:var(--text);font-size:14px;min-height:100vh;transition:background .2s,color .2s}
 
 /* HEADER */
-.hdr{background:linear-gradient(135deg,#6b1111 0%,#7f1d1d 40%,#1e3a5f 100%);color:#fff;
-  position:sticky;top:0;z-index:200;box-shadow:0 2px 16px rgba(0,0,0,.35)}
-.hdr-in{max-width:960px;margin:0 auto;padding:11px 14px;display:flex;align-items:center;gap:0}
+.hdr{background:linear-gradient(135deg,#6b1111 0%,#7f1d1d 40%,#1e3a5f 100%);
+  color:#fff;position:sticky;top:0;z-index:200;box-shadow:0 2px 16px rgba(0,0,0,.35)}
+.hdr-in{max-width:960px;margin:0 auto;padding:11px 14px;display:flex;align-items:center}
 .hdr-t{flex:1;min-width:0}
 .hdr-kn{font-size:13.5px;font-weight:700;line-height:1.3;color:#fff}
 .hdr-en{font-size:10.5px;font-weight:600;color:rgba(255,255,255,.8);margin-top:2px}
 .hdr-addr{font-size:8.5px;color:rgba(255,255,255,.55);margin-top:3px;line-height:1.55}
 .hdr-r{display:flex;align-items:center;gap:8px;flex-shrink:0;margin-left:12px}
-.hdr-st{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);
-  border-radius:9px;padding:5px 10px;text-align:center;display:none}
-@media(min-width:440px){.hdr-st{display:block}}
-.hdr-st .sn{font-size:15px;font-weight:700;color:#fff;line-height:1}
-.hdr-st .sl{font-size:8.5px;color:rgba(255,255,255,.6);display:block;margin-top:1px}
 .dark-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
   color:#fff;border-radius:8px;width:34px;height:34px;cursor:pointer;font-size:16px;
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s}
+  display:flex;align-items:center;justify-content:center;transition:background .15s}
 .dark-btn:hover{background:rgba(255,255,255,.2)}
 
 /* MAIN */
 .main{max-width:960px;margin:0 auto;padding:14px 12px 48px}
 
-/* STATS — only Vehicles + Owners + Tenants */
-.stats{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;margin-bottom:12px}
-.stats::-webkit-scrollbar{display:none}
-.sc{flex-shrink:0;background:var(--surface);border:1px solid var(--border);
-  border-radius:var(--r);padding:8px 14px;text-align:center;min-width:80px;box-shadow:var(--sh)}
-.sc .v{font-size:18px;font-weight:700;line-height:1}
+/* STATS: Owners | Tenants | Vehicles */
+.stats{display:flex;gap:7px;margin-bottom:12px}
+.sc{flex:1;background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);padding:9px 10px;text-align:center;box-shadow:var(--sh)}
+.sc .v{font-size:20px;font-weight:700;line-height:1}
 .sc .l{font-size:9px;color:var(--text4);margin-top:2px;font-weight:500}
-.v-green{color:var(--green)}.v-amber{color:var(--amber)}.v-red{color:var(--red2)}
+.v-green{color:var(--green)}.v-amber{color:var(--amber)}.v-red{color:#dc2626}
 
 /* SEARCH CARD */
 .scard{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);
@@ -85,10 +78,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,"Noto San
 .btn-go{background:var(--red);color:#fff;border:none;padding:10px 18px;border-radius:var(--r);
   font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;
   display:flex;align-items:center;gap:5px;transition:background .15s;font-family:inherit}
-.btn-go:hover{background:#6b1111}
-.btn-go:active{opacity:.88}
+.btn-go:hover{background:#6b1111}.btn-go:active{opacity:.88}
 
-/* Filters */
 .fgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px}
 @media(min-width:520px){.fgrid{grid-template-columns:repeat(4,1fr)}}
 .fsel{font-size:12px;padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;
@@ -108,7 +99,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,"Noto San
 .res-sum{font-size:12px;color:var(--text3);margin-left:auto;display:none}
 .res-sum b{color:var(--red-t);font-size:13px}
 
-/* Quick pills */
 .qlabel{font-size:10px;color:var(--text4);font-weight:500;margin-bottom:5px}
 .qpills{display:flex;gap:4px;flex-wrap:wrap}
 .pill{font-size:11px;padding:4px 10px;border-radius:20px;border:1.5px solid var(--border);
@@ -131,40 +121,64 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,"Noto San
 .prompt p{font-size:12px;color:var(--text4)}
 
 /* RESULTS HEADER */
-.rh{display:none;justify-content:space-between;align-items:center;margin-bottom:10px}
+.rh{display:none;justify-content:space-between;align-items:center;margin-bottom:12px}
 .rh.on{display:flex}
-.sort-btn{font-size:11px;color:var(--text4);padding:5px 10px;border:1px solid var(--border);
-  border-radius:6px;background:var(--surface);cursor:pointer;font-family:inherit}
+.sort-btn{font-size:11px;color:var(--text4);padding:5px 10px;
+  border:1px solid var(--border);border-radius:6px;background:var(--surface);
+  cursor:pointer;font-family:inherit}
 
-/* GRID */
-.rgrid{display:grid;grid-template-columns:1fr;gap:10px}
-@media(min-width:600px){.rgrid{grid-template-columns:1fr 1fr}}
+/* BLOCK GROUP HEADER */
+.blk-hdr{
+  display:flex;align-items:center;gap:10px;
+  margin:18px 0 8px;
+}
+.blk-hdr:first-child{margin-top:0}
+.blk-badge{
+  background:var(--red);color:#fff;font-size:13px;font-weight:700;
+  padding:5px 14px;border-radius:8px;font-family:"SF Mono",monospace;
+  white-space:nowrap;flex-shrink:0;
+}
+.blk-line{flex:1;height:1px;background:var(--border)}
+.blk-count{font-size:11px;color:var(--text4);white-space:nowrap;flex-shrink:0}
+
+/* FLOOR GROUP HEADER */
+.flr-hdr{
+  font-size:10.5px;font-weight:600;color:var(--text4);
+  text-transform:uppercase;letter-spacing:.6px;
+  margin:10px 0 6px;padding-left:2px;
+  display:flex;align-items:center;gap:6px;
+}
+.flr-hdr::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* GRID within each floor */
+.fgrid-cards{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:4px}
+@media(min-width:600px){.fgrid-cards{grid-template-columns:1fr 1fr}}
 
 /* CARD */
 .rcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);
-  overflow:hidden;box-shadow:var(--sh);transition:box-shadow .15s,transform .15s,border-color .15s}
-.rcard:hover{box-shadow:var(--sh-md);transform:translateY(-2px);border-color:var(--border2)}
-.rcard.owner{border-top:3px solid #1e40af}
+  overflow:hidden;box-shadow:var(--sh);transition:box-shadow .15s,transform .15s}
+.rcard:hover{box-shadow:var(--sh-md);transform:translateY(-2px)}
+.rcard.owner {border-top:3px solid #1e40af}
 .rcard.tenant{border-top:3px solid #92400e}
-.rcard.other{border-top:3px solid var(--red)}
+.rcard.other {border-top:3px solid var(--red)}
 .ch{display:flex;justify-content:space-between;align-items:flex-start;
-  padding:12px 14px 10px;border-bottom:1px solid var(--border)}
-.rname{font-size:15px;font-weight:700;color:var(--text);line-height:1.3;word-break:break-word}
+  padding:11px 13px 9px;border-bottom:1px solid var(--border)}
+.rname{font-size:14.5px;font-weight:700;color:var(--text);line-height:1.3;word-break:break-word}
 .rbadges{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
 .badge{display:inline-flex;align-items:center;gap:2px;
   font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px}
-.b-owner{background:var(--blue-bg);color:var(--blue)}
+.b-owner {background:var(--blue-bg); color:var(--blue)}
 .b-tenant{background:var(--amber-bg);color:var(--amber)}
-.b-ok{background:var(--green-bg);color:var(--green)}
-.b-floor{background:var(--purple-bg);color:var(--purple)}
-.b-gf{background:var(--teal-bg);color:var(--teal)}
-.fc{text-align:center;flex-shrink:0;margin-left:8px}
+.b-ok    {background:var(--green-bg);color:var(--green)}
+.b-floor {background:var(--purple-bg);color:var(--purple)}
+.b-gf   {background:var(--teal-bg); color:var(--teal)}
+.fc{flex-shrink:0;margin-left:8px}
 .fc-in{display:inline-block;background:var(--red);color:#fff;
-  font-size:13px;font-weight:700;padding:7px 11px;border-radius:9px;
+  font-size:12px;font-weight:700;padding:6px 10px;border-radius:8px;
   font-family:"SF Mono",SFMono-Regular,Menlo,monospace;
-  white-space:nowrap;min-width:62px;text-align:center}
+  white-space:nowrap;min-width:58px;text-align:center}
 .fc-in small{font-size:9px;display:block;opacity:.8;margin-top:1px;font-weight:400;font-family:inherit}
-.cb{padding:10px 14px 12px}
+.cb{padding:9px 13px 11px}
 .crow{display:flex;align-items:flex-start;gap:8px;margin-bottom:7px}
 .crow:last-child{margin-bottom:0}
 .cicon{flex-shrink:0;width:15px;height:15px;margin-top:1px;color:var(--text4)}
@@ -176,19 +190,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,"Noto San
 .plate{font-family:"SF Mono",monospace;font-size:11px;font-weight:700;
   padding:3px 8px;border-radius:5px;border:1.5px solid var(--border2);
   background:var(--surface2);color:var(--text);letter-spacing:.5px;text-transform:uppercase}
-.cf{padding:6px 14px;background:var(--surface2);border-top:1px solid var(--border);
+.cf{padding:5px 13px;background:var(--surface2);border-top:1px solid var(--border);
   display:flex;justify-content:space-between;align-items:center}
-.cts{font-size:9.5px;color:var(--text4)}
+.cts{font-size:9px;color:var(--text4)}
 
 /* NO RESULT */
 .nores{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);
-  padding:44px 24px;text-align:center;grid-column:1/-1}
-.nores svg{margin:0 auto 10px;opacity:.25}
-.nores p{font-size:13px;color:var(--text3);margin-top:6px}
+  padding:44px 24px;text-align:center}
+.nores p{font-size:13px;color:var(--text3);margin-top:8px}
 .nores .sub{font-size:11px;color:var(--text4);margin-top:4px}
 
 footer{text-align:center;padding:16px 16px 40px;font-size:10px;color:var(--text4);
-  max-width:960px;margin:0 auto;line-height:1.7;border-top:1px solid var(--border);margin-top:20px}
+  max-width:960px;margin:4px auto 0;line-height:1.7;border-top:1px solid var(--border)}
 </style>
 </head>
 <body>
@@ -196,7 +209,7 @@ footer{text-align:center;padding:16px 16px 40px;font-size:10px;color:var(--text4
 <header class="hdr">
   <div class="hdr-in">
     <div class="hdr-t">
-      <div class="hdr-kn">ಮಾಳಗಳ ಬಿ.ಡಿ.ಎ. ಅಪಾರ್ಟ್‌ಮೆಂಟ್ ಮಾಲೀಕರ ಕ್ಷೇಮಾಭಿವೃದ್ಧಿ ಸಂಘ (ರಿ.)</div>
+      <div class="hdr-kn">ಮಾಲಗಳ ಬಿ.ಡಿ.ಎ. ಅಪಾರ್ಟ್‌ಮೆಂಟ್ ಮಾಲೀಕರ ಕ್ಷೇಮಾಭಿವೃದ್ಧಿ ಸಂಘ (ರಿ.)</div>
       <div class="hdr-en">MALAGALA BDA APARTMENTS OWNERS WELFARE ASSOCIATION ®</div>
       <div class="hdr-addr">
         Reg. No: SOR/RJR/S-91/2016-17 &nbsp;·&nbsp; Survey No: 53 &amp; 36, Malagala, Panchasheela Nagar<br>
@@ -204,10 +217,6 @@ footer{text-align:center;padding:16px 16px 40px;font-size:10px;color:var(--text4
       </div>
     </div>
     <div class="hdr-r">
-      <div class="hdr-st" id="hdr-st">
-        <div class="sn" id="hst-n">—</div>
-        <span class="sl">Responses</span>
-      </div>
       <button class="dark-btn" id="dark-btn" onclick="toggleDark()" aria-label="Toggle dark mode">🌙</button>
     </div>
   </div>
@@ -302,7 +311,7 @@ footer{text-align:center;padding:16px 16px 40px;font-size:10px;color:var(--text4
       <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/>
       </svg>
-      Press Enter or tap Search · Results shown only after searching
+      Press Enter or tap Search · Results grouped by Block → Floor
     </p>
   </div>
 
@@ -319,37 +328,53 @@ footer{text-align:center;padding:16px 16px 40px;font-size:10px;color:var(--text4
     </svg>
     <h3>ಹುಡುಕಾಟ ಮಾಡಿ / Search Residents</h3>
     <p>ಹೆಸರು, ಬ್ಲಾಕ್, ಫ್ಲಾಟ್, ಮೊಬೈಲ್ ಅಥವಾ ವಾಹನ ನಂಬರ್ ನಮೂದಿಸಿ</p>
-    <p style="margin-top:4px">Enter name, block, flat, mobile or vehicle number above</p>
+    <p style="margin-top:4px">Enter name, block, flat, mobile or vehicle number</p>
   </div>
 
   <!-- Results header -->
   <div class="rh" id="rh">
     <span id="rc" style="font-size:12px;color:var(--text3)"></span>
-    <button class="sort-btn" onclick="toggleSort()">⇅ Sort: <span id="sort-lbl">Name A–Z</span></button>
+    <button class="sort-btn" onclick="toggleNameSort()">⇅ Name: <span id="sort-lbl">A–Z</span></button>
   </div>
 
-  <div class="rgrid" id="grid"></div>
+  <!-- Results output -->
+  <div id="results"></div>
+
 </div>
 
 <footer>
   <strong style="color:var(--red-t)">MBDAAOWA</strong> &nbsp;·&nbsp;
-  ಮಾಳಗಳ ಬಿ.ಡಿ.ಎ. ಅಪಾರ್ಟ್‌ಮೆಂಟ್ ಮಾಲೀಕರ ಕ್ಷೇಮಾಭಿವೃದ್ಧಿ ಸಂಘ (ರಿ.) &nbsp;·&nbsp; Reg. SOR/RJR/S-91/2016-17<br>
+  ಮಾಲಗಳ ಬಿ.ಡಿ.ಎ. ಅಪಾರ್ಟ್‌ಮೆಂಟ್ ಮಾಲೀಕರ ಕ್ಷೇಮಾಭಿವೃದ್ಧಿ ಸಂಘ (ರಿ.) &nbsp;·&nbsp; Reg. SOR/RJR/S-91/2016-17<br>
   Survey No: 53 &amp; 36, Malagala, Panchasheela Nagar, Near Moodalapalya Circle, Nagarabhavi Post, Bangalore – 560 072<br>
   <span style="color:var(--text4)">Read-only resident verification portal · Live data from Google Sheets</span>
 </footer>
 
 <script>
-/* ─── CONFIG ─── */
+/* ═══════════════════════════ CONFIG ═══════════════════════════ */
 const SHEET_ID = '1QQ6lkJAO2oZprVqUWPyV5S4ouROkoxAJuHg_p287a14';
 const SHEET    = encodeURIComponent('Form Responses 1');
 const GVZ      = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET}`;
 
-/* ─── STATE ─── */
-let ALL = [], CUR = [], SORT = 'name', READY = false;
+/* ═══════════════════════════ STATE ═══════════════════════════ */
+let ALL   = [];
+let CUR   = [];
+let NAME_ASC = true;   // within each floor group, sort names A→Z or Z→A
+let READY = false;
 
-/* ─── DARK MODE ─── */
+/* Floor ordering */
+const FLOOR_ORDER = ['001','002','003','004','101','102','103','104',
+                     '201','202','203','204','301','302','303','304'];
+const FLOOR_LABEL = {
+  '001':'Ground Floor','002':'Ground Floor','003':'Ground Floor','004':'Ground Floor',
+  '101':'1st Floor','102':'1st Floor','103':'1st Floor','104':'1st Floor',
+  '201':'2nd Floor','202':'2nd Floor','203':'2nd Floor','204':'2nd Floor',
+  '301':'3rd Floor','302':'3rd Floor','303':'3rd Floor','304':'3rd Floor',
+};
+const FLOOR_GROUP_ORDER = ['Ground Floor','1st Floor','2nd Floor','3rd Floor'];
+
+/* ═══════════════════════════ DARK MODE ═══════════════════════════ */
 function toggleDark() {
-  const d = document.documentElement;
+  const d   = document.documentElement;
   const now = d.dataset.theme === 'dark';
   d.dataset.theme = now ? 'light' : 'dark';
   document.getElementById('dark-btn').textContent = now ? '🌙' : '☀️';
@@ -360,17 +385,15 @@ function toggleDark() {
     const t = localStorage.getItem('mbda-theme');
     if (t) {
       document.documentElement.dataset.theme = t;
-      if (t === 'dark') {
-        window.addEventListener('DOMContentLoaded', () => {
-          const b = document.getElementById('dark-btn');
-          if (b) b.textContent = '☀️';
-        });
-      }
+      if (t === 'dark') window.addEventListener('DOMContentLoaded', () => {
+        const b = document.getElementById('dark-btn');
+        if (b) b.textContent = '☀️';
+      });
     }
   } catch(e){}
 })();
 
-/* ─── BOOT ─── */
+/* ═══════════════════════════ BOOT ═══════════════════════════ */
 window.addEventListener('DOMContentLoaded', () => {
   showLoader(true, 'Loading resident directory…');
   fetch(GVZ)
@@ -383,54 +406,46 @@ window.addEventListener('DOMContentLoaded', () => {
       showLoader(true, '⚠ Could not load data. Ensure Google Sheet is shared as Viewer.', true);
       console.error(err);
     });
-
   document.getElementById('q').addEventListener('keydown', e => {
     if (e.key === 'Enter') doSearch();
   });
 });
 
-/* ─── INGEST ──────────────────────────────────────────────────────────────────
-   Form Responses 1 column map:
-     c[0] = Timestamp
-     c[1] = Email
-     c[2] = Score/WA ref
-     c[3] = Full Name
-     c[4] = WhatsApp / Mobile
-     c[5] = Block  (e.g. "B7")
-     c[6] = Flat   (CRITICAL: gviz returns 1,2,3,4 as JS Number not String)
-     c[7] = Resident Type
-     c[8] = Vehicle Number
-     c[9] = Vehicle Type (last "type" column)
-──────────────────────────────────────────────────────────────────────────── */
+/* ═══════════════════════════ INGEST ═══════════════════════════
+   Form Responses 1 columns (0-indexed):
+     c[0] Timestamp  c[1] Email  c[2] WA ref
+     c[3] Name       c[4] Phone  c[5] Block
+     c[6] Flat  ← gviz returns 1/2/3/4 as JS Number, not String!
+     c[7] ResType    c[8] VehicleNo  c[9] VehicleType
+═══════════════════════════════════════════════════════════════ */
 function ingest(json) {
   const rows = json.table.rows || [];
 
   ALL = rows.map(row => {
-    // Safe getter — always returns a plain string
+    /* Safe string getter for all columns EXCEPT flat (c[6]) */
     const g = i => {
       if (!row.c || row.c[i] == null) return '';
       const cell = row.c[i];
       if (cell == null) return '';
-      // Use formatted value for timestamp (c[0]); raw value everywhere else
       const val = (i === 0 && cell.f != null) ? cell.f : cell.v;
-      if (val == null) return '';
-      return String(val).trim();
+      return val != null ? String(val).trim() : '';
     };
+
+    /* ── FLAT FIX ──────────────────────────────────────────────
+       Always read cell.v (the raw value) directly for column 6.
+       gviz returns ground-floor flats as JS Number (1, 2, 3, 4)
+       — cell.f is null for plain numbers, so g(6) returns ''.
+       We bypass g() entirely and use cell.v so we get the number.
+    ─────────────────────────────────────────────────────────── */
+    const rawFlatCell = (row.c && row.c[6] != null) ? row.c[6] : null;
+    const rawFlatV    = rawFlatCell ? rawFlatCell.v : null;   // may be Number or String
+    const flatN       = normFlat(rawFlatV);
 
     const block   = g(5).toUpperCase().replace(/\s/g, '');
     const resType = g(7);
+    const vRaw    = g(8);
 
-    // ── FLAT NUMBER FIX ──────────────────────────────────────────────────
-    // gviz returns ground-floor flats (1,2,3,4) as JS numbers.
-    // We must convert them to "001"–"004".
-    // All other flats (101-304) are already strings like "203".
-    const rawFlatVal = (row.c && row.c[6] != null) ? row.c[6].v : null;
-    const flatN = normFlat(rawFlatVal);
-    // ─────────────────────────────────────────────────────────────────────
-
-    const vRaw  = g(8);
-
-    return {
+    const rec = {
       ts:      g(0),
       name:    g(3),
       phone:   g(4),
@@ -441,15 +456,13 @@ function ingest(json) {
       vehicle: vRaw,
       vType:   g(9),
       plates:  splitPlates(vRaw),
-      blob:    '',    // filled below
+      blob:    '',
     };
-  }).filter(r => r.name.length > 0);
 
-  // Pre-build search blob (case-insensitive match target)
-  ALL.forEach(r => {
-    r.blob = [r.name, r.phone, r.block, r.flat,
-              r.vehicle, r.vType, r.resType].join(' ').toLowerCase();
-  });
+    rec.blob = [rec.name, rec.phone, rec.block, rec.flat,
+                rec.vehicle, rec.vType, rec.resType].join(' ').toLowerCase();
+    return rec;
+  }).filter(r => r.name.length > 0);
 
   ALL.sort((a, b) => a.name.localeCompare(b.name));
 
@@ -461,35 +474,27 @@ function ingest(json) {
   READY = true;
 }
 
-/* ─── NORMALISE FLAT ─────────────────────────────────────────────────────
-   Accepts both Number and String.
-   1  → "001"   2  → "002"   3  → "003"   4  → "004"
-   101 → "101"  203 → "203"  304 → "304"  etc.
-────────────────────────────────────────────────────────────────────────── */
+/* ═══════════════════════════ NORMALISE FLAT ═══════════════════
+   Accepts JS Number OR String.
+   1  → "001"   2 → "002"   3 → "003"   4 → "004"
+   101 → "101"  203 → "203"  304 → "304"
+═══════════════════════════════════════════════════════════════ */
 function normFlat(raw) {
   if (raw == null || raw === '') return '';
-  // raw may be JS Number (e.g. 1) or String (e.g. "203" or "Flat 3")
-  const n = typeof raw === 'number' ? raw : parseInt(String(raw).replace(/\D/g, ''), 10);
+  // Parse to integer regardless of whether input is Number or String
+  const n = typeof raw === 'number'
+    ? Math.round(raw)
+    : parseInt(String(raw).replace(/\D/g, ''), 10);
   if (isNaN(n)) return String(raw).trim();
-  // Ground floor: 1–4 → "001"–"004"
-  if (n >= 1 && n <= 4)     return String(n).padStart(3, '0');
-  // Standard upper floors
+  if (n >= 1   && n <= 4)   return String(n).padStart(3, '0');   // GF fix
   if (n >= 100 && n <= 304) return String(n).padStart(3, '0');
   return String(n).padStart(3, '0');
 }
 
-/* ─── FLOOR LABEL ─── */
-function floorLabel(flat) {
-  const n = parseInt(flat, 10);
-  if (isNaN(n))              return '';
-  if (n >= 1   && n <= 4)   return 'Ground Floor';
-  if (n >= 101 && n <= 104) return '1st Floor';
-  if (n >= 201 && n <= 204) return '2nd Floor';
-  if (n >= 301 && n <= 304) return '3rd Floor';
-  return '';
-}
+/* Floor label for a 3-digit flat code */
+function floorOf(flat) { return FLOOR_LABEL[flat] || ''; }
 
-/* ─── SPLIT VEHICLE PLATES ─── */
+/* ═══════════════════════════ SPLIT PLATES ═══════════════════════════ */
 function splitPlates(v) {
   if (!v) return [];
   const s = v.toString().trim();
@@ -499,13 +504,13 @@ function splitPlates(v) {
     .filter(p => p.length > 2 && !/^(N\/A|NA|NIL|NONE|NO)$/i.test(p));
 }
 
-/* ─── UNIQUE SORTED BLOCKS ─── */
+/* ═══════════════════════════ UNIQUE BLOCKS ═══════════════════════════ */
 function uniqueBlocks() {
   return [...new Set(ALL.map(r => r.block).filter(Boolean))]
     .sort((a, b) => (parseInt(a.replace(/\D/g,''))||0) - (parseInt(b.replace(/\D/g,''))||0));
 }
 
-/* ─── BUILD UI ─── */
+/* ═══════════════════════════ BUILD UI ═══════════════════════════ */
 function buildBlockDD() {
   const sel = document.getElementById('f-block');
   uniqueBlocks().forEach(b => {
@@ -513,7 +518,6 @@ function buildBlockDD() {
     o.value = b; o.textContent = b; sel.appendChild(o);
   });
 }
-
 function buildPills() {
   const c = document.getElementById('qpills');
   c.innerHTML = '';
@@ -533,17 +537,14 @@ function buildPills() {
     c.appendChild(p);
   });
 }
-
 function renderStats() {
   document.getElementById('st-o').textContent = ALL.filter(r => /owner/i.test(r.rtL)).length;
   document.getElementById('st-r').textContent = ALL.filter(r => /tenant/i.test(r.rtL)).length;
   document.getElementById('st-v').textContent = ALL.filter(r => r.plates.length > 0).length;
   document.getElementById('stats').style.display = 'flex';
-  document.getElementById('hst-n').textContent = ALL.length;
-  document.getElementById('hdr-st').style.display = 'block';
 }
 
-/* ─── SEARCH ─── */
+/* ═══════════════════════════ SEARCH ═══════════════════════════ */
 function doSearch() {
   if (!READY) return;
   const q   = document.getElementById('q').value.trim().toLowerCase();
@@ -555,7 +556,7 @@ function doSearch() {
   if (!q && !blk && !flt && !typ && !vf) {
     showPrompt(true);
     document.getElementById('rh').classList.remove('on');
-    document.getElementById('grid').innerHTML = '';
+    document.getElementById('results').innerHTML = '';
     document.getElementById('res-sum').style.display = 'none';
     return;
   }
@@ -563,9 +564,9 @@ function doSearch() {
   showPrompt(false);
 
   CUR = ALL.filter(r => {
-    if (q && !r.blob.includes(q))               return false;
+    if (q   && !r.blob.includes(q))             return false;
     if (blk && r.block !== blk)                 return false;
-    if (flt && r.flat !== flt)                  return false;
+    if (flt && r.flat  !== flt)                 return false;
     if (typ && !r.rtL.includes(typ))            return false;
     if (vf === 'has'  && !r.plates.length)      return false;
     if (vf === 'none' &&  r.plates.length)      return false;
@@ -576,7 +577,7 @@ function doSearch() {
     return true;
   });
 
-  applySortRender();
+  renderGrouped();
 }
 
 function clearAll() {
@@ -588,49 +589,37 @@ function clearAll() {
   document.querySelectorAll('.pill').forEach(p => p.classList.remove('on'));
   showPrompt(true);
   document.getElementById('rh').classList.remove('on');
-  document.getElementById('grid').innerHTML = '';
+  document.getElementById('results').innerHTML = '';
   document.getElementById('res-sum').style.display = 'none';
   document.getElementById('q').focus();
 }
 
-function toggleSort() {
-  const m = ['name','block','ts'];
-  SORT = m[(m.indexOf(SORT)+1) % m.length];
-  document.getElementById('sort-lbl').textContent =
-    SORT==='name' ? 'Name A–Z' : SORT==='block' ? 'Block / Flat' : 'Date';
-  applySortRender();
+function toggleNameSort() {
+  NAME_ASC = !NAME_ASC;
+  document.getElementById('sort-lbl').textContent = NAME_ASC ? 'A–Z' : 'Z–A';
+  if (CUR.length) renderGrouped();
 }
 
-function applySortRender() {
-  if (SORT === 'name')
-    CUR.sort((a,b) => a.name.localeCompare(b.name));
-  else if (SORT === 'block')
-    CUR.sort((a,b) => {
-      const nb = x => parseInt(x.replace(/\D/g,''))||0;
-      return nb(a.block)-nb(b.block) || a.flat.localeCompare(b.flat);
-    });
-  else
-    CUR.sort((a,b) => b.ts.localeCompare(a.ts));
-  renderGrid();
-}
+/* ═══════════════════════════ GROUPED RENDER ═══════════════════
+   Layout: Block (B1, B2…) → Floor (Ground, 1st, 2nd, 3rd)
+           → Cards (sorted by name within each floor)
+═══════════════════════════════════════════════════════════════ */
+function renderGrouped() {
+  const out = document.getElementById('results');
+  const rh  = document.getElementById('rh');
+  const rc  = document.getElementById('rc');
+  const rs  = document.getElementById('res-sum');
 
-/* ─── RENDER ─── */
-function renderGrid() {
-  const grid = document.getElementById('grid');
-  const rh   = document.getElementById('rh');
-  const rc   = document.getElementById('rc');
-  const rs   = document.getElementById('res-sum');
-
-  grid.innerHTML = '';
+  out.innerHTML = '';
   rh.classList.add('on');
 
   const n = CUR.length;
   rc.textContent = '';
-  rs.innerHTML = `<b>${n}</b> record${n!==1?'s':''} found`;
+  rs.innerHTML = `<b>${n}</b> record${n !== 1 ? 's' : ''} found`;
   rs.style.display = 'block';
 
   if (n === 0) {
-    grid.innerHTML = `
+    out.innerHTML = `
       <div class="nores">
         <svg width="40" height="40" fill="none" stroke="currentColor"
              stroke-width="1.2" viewBox="0 0 24 24">
@@ -638,31 +627,84 @@ function renderGrid() {
           <path stroke-linecap="round" d="m21 21-4.35-4.35"/>
         </svg>
         <p>ಯಾವುದೇ ದಾಖಲೆ ಕಂಡುಬಂದಿಲ್ಲ / No records found</p>
-        <p class="sub">Try a different name, block, flat number, or vehicle number</p>
+        <p class="sub">Try a different name, block, flat, mobile or vehicle number</p>
       </div>`;
     return;
   }
 
-  CUR.slice(0, 100).forEach(r => grid.appendChild(makeCard(r)));
+  /* ── Group by Block ── */
+  const byBlock = {};
+  CUR.forEach(r => {
+    if (!byBlock[r.block]) byBlock[r.block] = [];
+    byBlock[r.block].push(r);
+  });
 
-  if (n > 100) {
-    const note = document.createElement('p');
-    note.style.cssText = 'text-align:center;font-size:12px;color:var(--text4);grid-column:1/-1;padding:10px';
-    note.textContent = `Showing 100 of ${n} results — refine your search for more specific results.`;
-    grid.appendChild(note);
-  }
+  /* ── Sort blocks numerically ── */
+  const sortedBlocks = Object.keys(byBlock)
+    .sort((a, b) => (parseInt(a.replace(/\D/g,''))||0) - (parseInt(b.replace(/\D/g,''))||0));
+
+  sortedBlocks.forEach(blk => {
+    const blkRecords = byBlock[blk];
+
+    /* Block header */
+    const bh = document.createElement('div');
+    bh.className = 'blk-hdr';
+    bh.innerHTML = `
+      <div class="blk-badge">${esc(blk)}</div>
+      <div class="blk-line"></div>
+      <div class="blk-count">${blkRecords.length} resident${blkRecords.length!==1?'s':''}</div>`;
+    out.appendChild(bh);
+
+    /* ── Group by Floor within block ── */
+    const byFloor = {};
+    blkRecords.forEach(r => {
+      const fg = floorOf(r.flat) || 'Other';
+      if (!byFloor[fg]) byFloor[fg] = [];
+      byFloor[fg].push(r);
+    });
+
+    /* Sort floors in canonical order */
+    const sortedFloors = [...FLOOR_GROUP_ORDER, 'Other']
+      .filter(f => byFloor[f]);
+
+    sortedFloors.forEach(flr => {
+      const flrRecs = byFloor[flr];
+
+      /* Sort cards by flat number first, then by name */
+      flrRecs.sort((a, b) => {
+        const fa = FLOOR_ORDER.indexOf(a.flat);
+        const fb = FLOOR_ORDER.indexOf(b.flat);
+        if (fa !== fb) return fa - fb;
+        return NAME_ASC
+          ? a.name.localeCompare(b.name)
+          : b.name.localeCompare(a.name);
+      });
+
+      /* Floor sub-header */
+      const fh = document.createElement('div');
+      fh.className = 'flr-hdr';
+      fh.textContent = flr + ` (${flrRecs.length})`;
+      out.appendChild(fh);
+
+      /* Cards grid for this floor */
+      const grid = document.createElement('div');
+      grid.className = 'fgrid-cards';
+      flrRecs.forEach(r => grid.appendChild(makeCard(r)));
+      out.appendChild(grid);
+    });
+  });
 }
 
-/* ─── MAKE CARD ─── */
+/* ═══════════════════════════ MAKE CARD ═══════════════════════════ */
 function makeCard(r) {
   const div = document.createElement('div');
   const isOwner  = /owner/i.test(r.rtL);
   const isTenant = /tenant/i.test(r.rtL);
   div.className = 'rcard ' + (isOwner ? 'owner' : isTenant ? 'tenant' : 'other');
 
-  const isGF   = ['001','002','003','004'].includes(r.flat);
-  const floor  = floorLabel(r.flat);
-  const hasVeh = r.plates.length > 0;
+  const isGF  = ['001','002','003','004'].includes(r.flat);
+  const floor = floorOf(r.flat);
+  const hasV  = r.plates.length > 0;
 
   const typeBadge = r.resType
     ? `<span class="badge ${isOwner?'b-owner':isTenant?'b-tenant':'b-ok'}">${isOwner?'🏠':'🏘'} ${esc(r.resType)}</span>`
@@ -686,7 +728,7 @@ function makeCard(r) {
       </div>
     </div>` : '';
 
-  const vRow = hasVeh ? `
+  const vRow = hasV ? `
     <div class="crow">
       <svg class="cicon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
            stroke-width="1.8" stroke-linecap="round">
@@ -739,7 +781,7 @@ function makeCard(r) {
   return div;
 }
 
-/* ─── HELPERS ─── */
+/* ═══════════════════════════ HELPERS ═══════════════════════════ */
 function esc(s) {
   return (s||'').toString()
     .replace(/&/g,'&amp;').replace(/</g,'&lt;')
@@ -764,3 +806,10 @@ function showPrompt(show) {
 </script>
 </body>
 </html>'''
+
+with open('/home/claude/MBDAAOWA_Search_final.html', 'w', encoding='utf-8') as f:
+    f.write(HTML)
+size = len(HTML.encode())
+print(f'OK: {size:,} bytes ({size//1024} KB)')
+PYEOF
+python3 /home/claude/build_final.py
