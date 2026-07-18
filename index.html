@@ -139,39 +139,128 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,"Noto San
 .toast.ok{background:var(--grn)}
 
 /* ── CAMERA MODAL ── */
+/* ── VEHICLE SCAN MODAL ── */
 .cam-modal{display:none;position:fixed;inset:0;z-index:500;
-  background:rgba(0,0,0,.85);align-items:center;justify-content:center;
-  flex-direction:column;gap:12px}
+  background:rgba(0,0,0,.92);align-items:flex-end;justify-content:center}
+@media(min-width:520px){.cam-modal{align-items:center}}
 .cam-modal.open{display:flex}
-.cam-box{background:var(--sur);border-radius:16px;overflow:hidden;
-  width:min(94vw,440px);box-shadow:0 8px 32px rgba(0,0,0,.5)}
+.cam-box{background:var(--sur);border-radius:20px 20px 0 0;overflow:hidden;
+  width:100%;max-width:480px;box-shadow:0 -8px 40px rgba(0,0,0,.6);
+  display:flex;flex-direction:column;max-height:96vh}
+@media(min-width:520px){.cam-box{border-radius:20px;max-height:92vh}}
 .cam-header{display:flex;justify-content:space-between;align-items:center;
-  padding:12px 16px;border-bottom:1px solid var(--bdr)}
-.cam-title{font-size:13px;font-weight:600;color:var(--tx)}
-.cam-close{background:none;border:none;cursor:pointer;color:var(--tx3);
-  font-size:20px;line-height:1;padding:2px 6px;border-radius:6px}
+  padding:14px 16px 10px;flex-shrink:0}
+.cam-title{font-size:13px;font-weight:700;color:var(--tx);
+  display:flex;align-items:center;gap:7px}
+.cam-title-icon{font-size:18px}
+.cam-close{background:var(--sur2);border:none;cursor:pointer;color:var(--tx3);
+  width:30px;height:30px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:15px;font-weight:700}
 .cam-close:hover{background:var(--bdr);color:var(--tx)}
-.cam-body{padding:14px;display:flex;flex-direction:column;gap:10px}
-#cam-video{width:100%;border-radius:10px;background:#000;display:block;max-height:300px;object-fit:cover}
-#cam-canvas{display:none}
-.cam-actions{display:flex;gap:8px}
-.cam-btn{flex:1;padding:10px;border-radius:var(--r);border:none;cursor:pointer;
-  font-size:13px;font-weight:600;font-family:inherit;transition:background .15s}
-.cam-btn-snap{background:var(--red);color:#fff}
+
+/* Viewfinder area */
+.cam-vf{position:relative;background:#000;flex-shrink:0;
+  border-top:1px solid var(--bdr)}
+#cam-video{width:100%;display:block;max-height:50vw;
+  object-fit:cover;background:#111}
+@media(min-width:520px){#cam-video{max-height:240px}}
+
+/* Aiming reticle overlay */
+.cam-reticle{position:absolute;inset:0;display:flex;align-items:center;
+  justify-content:center;pointer-events:none}
+.reticle-box{
+  width:80%;max-width:320px;height:56px;
+  border:2.5px solid rgba(255,220,0,.85);
+  border-radius:8px;position:relative;
+  box-shadow:0 0 0 2000px rgba(0,0,0,.35);
+}
+.reticle-box::before,.reticle-box::after{
+  content:'';position:absolute;width:18px;height:18px;border-color:#fd0;
+  border-style:solid;border-width:0}
+.reticle-box::before{top:-3px;left:-3px;border-top-width:3px;border-left-width:3px;border-radius:4px 0 0 0}
+.reticle-box::after{bottom:-3px;right:-3px;border-bottom-width:3px;border-right-width:3px;border-radius:0 0 4px 0}
+.reticle-label{position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);
+  font-size:9px;color:rgba(255,220,0,.9);white-space:nowrap;font-weight:600;letter-spacing:.5px}
+
+/* Scan progress bar */
+.scan-bar-wrap{height:3px;background:var(--bdr);flex-shrink:0;overflow:hidden}
+.scan-bar{height:100%;width:0;background:linear-gradient(90deg,var(--red),#f59e0b);
+  transition:width .3s;border-radius:2px}
+
+/* Body */
+.cam-body{padding:12px 14px 14px;display:flex;flex-direction:column;gap:10px;
+  overflow-y:auto;flex:1}
+
+/* Status line */
+.cam-status{font-size:11.5px;font-weight:600;color:var(--tx3);
+  text-align:center;min-height:18px;transition:color .2s}
+.cam-status.scanning{color:#f59e0b}
+.cam-status.found{color:var(--grn)}
+.cam-status.error{color:#ef4444}
+
+/* Live plate display */
+.live-plate-wrap{display:none;justify-content:center}
+.live-plate-wrap.show{display:flex}
+.live-plate{
+  font-family:"SF Mono",SFMono-Regular,Menlo,Courier,monospace;
+  font-size:22px;font-weight:900;letter-spacing:3px;
+  padding:10px 20px;border-radius:8px;
+  background:#fff;color:#111;
+  border:3px solid #f59e0b;
+  box-shadow:0 2px 12px rgba(245,158,11,.3);
+  text-transform:uppercase;text-align:center;
+  min-width:180px;
+}
+[data-theme="dark"] .live-plate{background:#1e1e1e;color:#fff;border-color:#f59e0b}
+
+/* Actions */
+.cam-actions{display:flex;gap:8px;flex-shrink:0}
+.cam-btn{flex:1;padding:11px 8px;border-radius:10px;border:none;cursor:pointer;
+  font-size:13px;font-weight:700;font-family:inherit;transition:all .15s;
+  display:flex;align-items:center;justify-content:center;gap:6px}
+.cam-btn:active{transform:scale(.96)}
+.cam-btn-snap{background:var(--red);color:#fff;flex:2}
 .cam-btn-snap:hover{background:#6b1111}
+.cam-btn-snap:disabled{background:var(--bdr2);color:var(--tx4);cursor:not-allowed}
 .cam-btn-upload{background:var(--sur2);color:var(--tx2);border:1.5px solid var(--bdr)}
 .cam-btn-upload:hover{background:var(--bdr)}
-.cam-result{background:var(--sur2);border:1px solid var(--bdr);border-radius:8px;
-  padding:10px 12px;font-size:12px;color:var(--tx2);display:none;line-height:1.5}
-.cam-result.show{display:block}
-.cam-result b{color:var(--redt);display:block;margin-bottom:4px;font-size:11px}
-.cam-ocr-matches{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
-.cam-match-pill{font-size:11px;padding:3px 9px;border-radius:16px;cursor:pointer;
-  background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue);font-weight:600}
-[data-theme="dark"] .cam-match-pill{background:var(--blue-bg);color:#93c5fd;border-color:#1e40af}
-.cam-match-pill:hover{background:var(--blue);color:#fff}
-.cam-hint{font-size:10px;color:var(--tx4);text-align:center;line-height:1.5}
+.cam-btn-auto{background:#1e40af;color:#fff;font-size:11px;padding:11px 12px}
+.cam-btn-auto:hover{background:#1e3a8a}
+.cam-btn-auto.active{background:#166534;animation:pulse-auto 2s infinite}
+@keyframes pulse-auto{0%,100%{box-shadow:0 0 0 0 rgba(22,101,52,.4)}
+  50%{box-shadow:0 0 0 6px rgba(22,101,52,0)}}
+
+/* Matches */
+.cam-matches-wrap{display:none}
+.cam-matches-wrap.show{display:block}
+.cam-matches-title{font-size:10px;font-weight:600;color:var(--tx4);
+  text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px}
+.cam-plates-grid{display:flex;flex-wrap:wrap;gap:6px}
+.plate-match-btn{
+  font-family:"SF Mono",SFMono-Regular,Menlo,Courier,monospace;
+  font-size:13px;font-weight:700;letter-spacing:1.5px;
+  padding:7px 14px;border-radius:8px;border:2px solid;
+  cursor:pointer;transition:all .15s;text-transform:uppercase;font-family:inherit;
+}
+.plate-match-btn.found{
+  background:var(--grn-bg);color:var(--grn);border-color:var(--grn);
+  box-shadow:0 2px 8px rgba(22,101,52,.2)}
+.plate-match-btn.found:hover{background:var(--grn);color:#fff}
+.plate-match-btn.raw{
+  background:var(--sur2);color:var(--tx2);border-color:var(--bdr2)}
+.plate-match-btn.raw:hover{background:var(--bdr);color:var(--tx)}
+
+/* No match */
+.cam-nomatch{font-size:11px;color:var(--tx4);padding:8px;text-align:center;
+  background:var(--sur2);border-radius:8px;line-height:1.5}
+
+/* Tips */
+.cam-tips{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.cam-tip{font-size:10px;color:var(--tx4);background:var(--sur2);
+  border-radius:7px;padding:6px 8px;display:flex;align-items:flex-start;gap:5px;line-height:1.4}
+.cam-tip-icon{font-size:13px;flex-shrink:0}
 #file-input{display:none}
+#proc-canvas{display:none}
 
 /* ── LOADER ── */
 .ldr{display:none;justify-content:center;align-items:center;padding:44px;gap:10px}
@@ -434,37 +523,87 @@ footer{text-align:center;padding:16px 16px 40px;font-size:10px;color:var(--tx4);
 <!-- ── CAMERA / IMAGE MODAL ── -->
 <div class="cam-modal" id="cam-modal">
   <div class="cam-box">
+
+    <!-- Header -->
     <div class="cam-header">
-      <span class="cam-title">📷 ವಾಹನ / ಹೆಸರು ಸ್ಕ್ಯಾನ್ &nbsp;/&nbsp; Scan Vehicle / Name</span>
-      <button class="cam-close" onclick="closeCamera()">✕</button>
+      <div class="cam-title">
+        <span class="cam-title-icon">🚗</span>
+        Vehicle Number Scanner
+      </div>
+      <button class="cam-close" onclick="closeCamera()" aria-label="Close">✕</button>
     </div>
-    <div class="cam-body">
+
+    <!-- Viewfinder -->
+    <div class="cam-vf">
       <video id="cam-video" autoplay playsinline muted></video>
-      <canvas id="cam-canvas"></canvas>
+      <!-- Aiming reticle: align number plate here -->
+      <div class="cam-reticle">
+        <div class="reticle-box" id="reticle">
+          <span class="reticle-label">ALIGN NUMBER PLATE HERE</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scan progress bar -->
+    <div class="scan-bar-wrap"><div class="scan-bar" id="scan-bar"></div></div>
+
+    <!-- Body -->
+    <div class="cam-body">
+
+      <!-- Status message -->
+      <div class="cam-status" id="cam-status">Point rear camera at a number plate</div>
+
+      <!-- Live detected plate display -->
+      <div class="live-plate-wrap" id="live-plate-wrap">
+        <div class="live-plate" id="live-plate">—</div>
+      </div>
+
+      <!-- Action buttons -->
       <div class="cam-actions">
         <button class="cam-btn cam-btn-snap" id="snap-btn" onclick="snapPhoto()">
-          📸 &nbsp;Capture
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
+               stroke-linecap="round" viewBox="0 0 24 24">
+            <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/>
+            <circle cx="12" cy="13" r="4"/>
+          </svg>
+          Capture &amp; Scan
         </button>
-        <button class="cam-btn cam-btn-upload" onclick="document.getElementById('file-input').click()">
-          🖼 &nbsp;Upload Image
+        <button class="cam-btn cam-btn-auto" id="auto-btn" onclick="toggleAutoScan()"
+          title="Auto-scan every 2 seconds">
+          ⟳ Auto
+        </button>
+        <button class="cam-btn cam-btn-upload" onclick="document.getElementById('file-input').click()"
+          title="Upload photo of number plate">
+          🖼
         </button>
       </div>
-      <input type="file" id="file-input" accept="image/*" onchange="handleFileUpload(event)">
-      <div class="cam-result" id="cam-result">
-        <b>🔍 Text detected — tap to search:</b>
-        <div class="cam-ocr-matches" id="cam-matches"></div>
+
+      <!-- Detected plates / results -->
+      <div class="cam-matches-wrap" id="cam-matches-wrap">
+        <div class="cam-matches-title" id="cam-matches-title">Detected plates — tap to search</div>
+        <div class="cam-plates-grid" id="cam-plates-grid"></div>
       </div>
-      <p class="cam-hint">
-        Point camera at a vehicle number plate, resident name board, or upload any image.<br>
-        Detected text will be matched against the resident directory.
-      </p>
+
+      <!-- Tips -->
+      <div class="cam-tips">
+        <div class="cam-tip"><span class="cam-tip-icon">☀</span>Ensure good lighting — avoid glare</div>
+        <div class="cam-tip"><span class="cam-tip-icon">📏</span>Hold 30–60 cm from plate</div>
+        <div class="cam-tip"><span class="cam-tip-icon">🎯</span>Align plate inside yellow box</div>
+        <div class="cam-tip"><span class="cam-tip-icon">🖼</span>Or upload a photo from gallery</div>
+      </div>
     </div>
+
   </div>
 </div>
 
+<!-- Hidden canvases for image processing -->
+<canvas id="cam-canvas" style="display:none"></canvas>
+<canvas id="proc-canvas" style="display:none"></canvas>
+<input type="file" id="file-input" accept="image/*" onchange="handleFileUpload(event)">
+
 <footer>
   <strong style="color:var(--redt)">MBDAAOWA</strong> &nbsp;·&nbsp;
-  ಮಾಲಗಳ ಬಿ.ಡಿ.ಎ. ಅಪಾರ್ಟ್‌ಮೆಂಟ್ ಮಾಲೀಕರ ಕ್ಷೇಮಾಭಿವೃದ್ಧಿ ಸಂಘ (ರಿ.) &nbsp;·&nbsp; Reg. SOR/RJR/S-91/2016-17<br>
+  ಮಾಳಗಳ ಬಿ.ಡಿ.ಎ. ಅಪಾರ್ಟ್‌ಮೆಂಟ್ ಮಾಲೀಕರ ಕ್ಷೇಮಾಭಿವೃದ್ಧಿ ಸಂಘ (ರಿ.) &nbsp;·&nbsp; Reg. SOR/RJR/S-91/2016-17<br>
   Survey No: 53 &amp; 36, Malagala, Panchasheela Nagar, Near Moodalapalya Circle,
   Nagarabhavi Post, Bangalore – 560 072<br>
   <span style="color:var(--tx4)">Read-only resident verification portal · Live data from Google Sheets</span>
@@ -1162,215 +1301,391 @@ function stopVoice() {
         and words → show as tappable pills
      5. Tap a pill → put it in search box → doSearch()
 ═══════════════════════════════════════════════════════ */
-var camStream  = null;
-var tesseractReady = false;
-var tesseractLoading = false;
-var tesseractWorker  = null;
+/* ═══════════════════════════════════════════════════════
+   VEHICLE PLATE SCANNER — fast, plate-first OCR engine
+   Pipeline:
+     1. Capture video frame (or uploaded image)
+     2. Crop reticle zone (centre 82% w × 22% h)
+     3. Preprocess: greyscale → contrast stretch → sharpen
+        → adaptive threshold → 2.5× upscale
+     4. Tesseract OCR (eng only, plate char whitelist)
+     5. Parse Indian plate patterns (with OCR confusion fixes)
+     6. Match instantly against ALL[].plates in memory
+     7. Show matched (green) + raw candidates (grey)
+     8. Tap → search → close
+   Auto-scan: re-runs every 2 s automatically.
+═══════════════════════════════════════════════════════ */
 
-/* Lazy-load Tesseract.js from CDN */
+/* ── State ── */
+var camStream      = null;
+var autoScanTimer  = null;
+var autoScanActive = false;
+var scanBusy       = false;
+
+/* ── Tesseract worker (lazy, plate-optimised) ── */
+var tReady   = false;
+var tLoading = false;
+var tWorker  = null;
+
 function loadTesseract(cb) {
-  if (tesseractReady) { cb(); return; }
-  if (tesseractLoading) {
-    var wait = setInterval(function() {
-      if (tesseractReady) { clearInterval(wait); cb(); }
-    }, 300);
+  if (tReady)   { cb(); return; }
+  if (tLoading) {
+    var t = setInterval(function() { if (tReady) { clearInterval(t); cb(); } }, 250);
     return;
   }
-  tesseractLoading = true;
-  showToast('⏳ Loading OCR engine…', '', 99999);
+  tLoading = true;
+  setCamStatus('Loading scan engine (one-time)…', 'scanning');
+  setScanBar(20);
   var s = document.createElement('script');
-  s.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+  s.src   = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+  s.async = true;
   s.onload = function() {
-    Tesseract.createWorker(['eng', 'kan'], 1, {
-      logger: function() {}
-    }).then(function(w) {
-      tesseractWorker = w;
-      tesseractReady  = true;
-      document.getElementById('toast').classList.remove('show');
-      cb();
-    }).catch(function(err) {
-      showToast('⚠ OCR engine failed to load', 'err', 3500);
-      console.error('Tesseract init error:', err);
-    });
+    setScanBar(50);
+    Tesseract.createWorker('eng', 1, { logger: function() {} })
+      .then(function(w) {
+        return w.setParameters({
+          tessedit_char_whitelist:
+            'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz -',
+          tessedit_pageseg_mode: '7',
+          preserve_interword_spaces: '0'
+        }).then(function() { return w; });
+      })
+      .then(function(w) {
+        tWorker = w; tReady = true;
+        setScanBar(0);
+        setCamStatus('Ready — Capture or tap Auto', '');
+        cb();
+      })
+      .catch(function(e) {
+        setCamStatus('OCR engine failed to load', 'error');
+        setScanBar(0); console.error(e);
+      });
   };
   s.onerror = function() {
-    showToast('⚠ Could not load OCR engine. Check connection.', 'err', 4000);
+    setCamStatus('Could not load OCR — check connection', 'error');
+    setScanBar(0);
   };
   document.head.appendChild(s);
 }
 
+/* ── Camera open / close ── */
 function openCamera() {
   document.getElementById('cam-modal').classList.add('open');
-  document.getElementById('cam-result').classList.remove('show');
-  document.getElementById('snap-btn').disabled = false;
-
+  resetScanUI();
+  stopAutoScan();
+  if (!tReady && !tLoading) loadTesseract(function() {});
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-    showToast('⚠ Camera not supported — use Upload Image instead', 'err', 4000);
-    return;
+    setCamStatus('Camera not available — use Upload instead', 'error'); return;
   }
-
   navigator.mediaDevices.getUserMedia({
-    video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 } },
+    video: { facingMode: { ideal: 'environment' },
+             width: { ideal: 1920 }, height: { ideal: 1080 } },
     audio: false
   }).then(function(stream) {
     camStream = stream;
-    var v = document.getElementById('cam-video');
-    v.srcObject = stream;
-    v.style.display = 'block';
+    document.getElementById('cam-video').srcObject = stream;
+    setCamStatus('Align plate inside yellow box → Capture', '');
   }).catch(function(err) {
-    document.getElementById('cam-video').style.display = 'none';
     var msg = err.name === 'NotAllowedError'
-      ? '🚫 Camera permission denied — use Upload Image'
-      : '⚠ Camera unavailable — use Upload Image instead';
-    showToast(msg, 'err', 4000);
-    console.warn('Camera error:', err);
+      ? 'Camera permission denied — use Upload instead'
+      : 'Camera unavailable — use Upload instead';
+    setCamStatus(msg, 'error');
   });
 }
 
 function closeCamera() {
+  stopAutoScan();
   document.getElementById('cam-modal').classList.remove('open');
-  if (camStream) {
-    camStream.getTracks().forEach(function(t) { t.stop(); });
-    camStream = null;
-  }
-  var v = document.getElementById('cam-video');
-  v.srcObject = null;
+  if (camStream) { camStream.getTracks().forEach(function(t){t.stop();}); camStream = null; }
+  document.getElementById('cam-video').srcObject = null;
 }
 
+/* ── Auto-scan ── */
+function toggleAutoScan() {
+  if (autoScanActive) stopAutoScan(); else startAutoScan();
+}
+function startAutoScan() {
+  if (autoScanActive) return;
+  autoScanActive = true;
+  var btn = document.getElementById('auto-btn');
+  btn.classList.add('active'); btn.textContent = '⏹ Stop';
+  setCamStatus('Auto-scanning every 2 s…', 'scanning');
+  autoScanTimer = setInterval(function() { if (!scanBusy) snapPhoto(); }, 2000);
+  snapPhoto();
+}
+function stopAutoScan() {
+  autoScanActive = false;
+  clearInterval(autoScanTimer);
+  var btn = document.getElementById('auto-btn');
+  if (btn) { btn.classList.remove('active'); btn.textContent = '⟳ Auto'; }
+}
+
+/* ── Capture ── */
 function snapPhoto() {
-  var video  = document.getElementById('cam-video');
+  if (scanBusy) return;
+  var video = document.getElementById('cam-video');
+  if (!video.videoWidth) { setCamStatus('Camera not ready yet', 'error'); return; }
   var canvas = document.getElementById('cam-canvas');
-  if (!video.videoWidth) {
-    showToast('⚠ Camera not ready yet', 'err');
-    return;
-  }
   canvas.width  = video.videoWidth;
   canvas.height = video.videoHeight;
   canvas.getContext('2d').drawImage(video, 0, 0);
-  processImage(canvas);
+  processCanvas(canvas);
 }
 
 function handleFileUpload(e) {
   var file = e.target.files && e.target.files[0];
   if (!file) return;
+  stopAutoScan();
   var reader = new FileReader();
   reader.onload = function(ev) {
     var img = new Image();
     img.onload = function() {
       var canvas = document.getElementById('cam-canvas');
-      canvas.width  = img.width;
-      canvas.height = img.height;
+      canvas.width = img.width; canvas.height = img.height;
       canvas.getContext('2d').drawImage(img, 0, 0);
-      processImage(canvas);
+      processCanvas(canvas);
     };
     img.src = ev.target.result;
   };
   reader.readAsDataURL(file);
-  /* Reset so same file can be re-selected */
   e.target.value = '';
 }
 
-function processImage(canvas) {
+/* ── Image preprocessing ── */
+function processCanvas(srcCanvas) {
+  scanBusy = true;
   document.getElementById('snap-btn').disabled = true;
-  showToast('🔍 Reading text…', '', 99999);
+  setCamStatus('Scanning…', 'scanning');
+  setScanBar(30);
+
+  var sw = srcCanvas.width, sh = srcCanvas.height;
+  /* Crop the reticle zone: 82% width centred, 22% height centred */
+  var cw = Math.round(sw * 0.82), ch = Math.round(sh * 0.22);
+  var cx = Math.round((sw - cw) / 2), cy = Math.round((sh - ch) / 2);
+
+  var pc = document.getElementById('proc-canvas');
+  var scale = 2.5;
+  pc.width  = Math.round(cw * scale);
+  pc.height = Math.round(ch * scale);
+  var ctx = pc.getContext('2d');
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(srcCanvas, cx, cy, cw, ch, 0, 0, pc.width, pc.height);
+
+  var id = ctx.getImageData(0, 0, pc.width, pc.height);
+  preprocessPixels(id);
+  ctx.putImageData(id, 0, 0);
+  setScanBar(60);
 
   loadTesseract(function() {
-    canvas.toBlob(function(blob) {
-      tesseractWorker.recognize(blob)
-        .then(function(result) {
-          document.getElementById('toast').classList.remove('show');
+    pc.toBlob(function(blob) {
+      tWorker.recognize(blob)
+        .then(function(res) {
+          setScanBar(90);
+          handlePlateOCR(res.data.text || '');
+          setScanBar(0);
+          scanBusy = false;
           document.getElementById('snap-btn').disabled = false;
-          var raw  = result.data.text || '';
-          handleOCRText(raw);
         })
         .catch(function(err) {
+          setCamStatus('Scan failed — try again', 'error');
+          setScanBar(0); scanBusy = false;
           document.getElementById('snap-btn').disabled = false;
-          showToast('⚠ OCR failed — try a clearer image', 'err', 3500);
-          console.error('OCR error:', err);
+          console.error(err);
         });
     }, 'image/png');
   });
 }
 
-/* Parse OCR output into searchable tokens */
-function handleOCRText(raw) {
-  var tokens = extractTokens(raw);
-  var matchBox = document.getElementById('cam-matches');
-  var resultBox = document.getElementById('cam-result');
+/* ── Pixel pipeline: greyscale → contrast stretch → sharpen → adaptive threshold ── */
+function preprocessPixels(imgData) {
+  var d = imgData.data, w = imgData.width, h = imgData.height;
+  var grey = new Uint8Array(w * h);
+  var mn = 255, mx = 0;
 
-  matchBox.innerHTML = '';
+  for (var i = 0, p = 0; i < d.length; i += 4, p++) {
+    var g = 0.299*d[i] + 0.587*d[i+1] + 0.114*d[i+2];
+    grey[p] = g; if (g < mn) mn = g; if (g > mx) mx = g;
+  }
+  var range = mx - mn || 1;
+  for (var p2 = 0; p2 < grey.length; p2++)
+    grey[p2] = Math.round((grey[p2] - mn) * 255 / range);
 
-  if (!tokens.length) {
-    resultBox.innerHTML = '<b style="color:var(--amb)">⚠ No recognisable text found</b>'
-      + '<p style="font-size:11px;color:var(--tx4);margin-top:4px">'
-      + 'Try a clearer, brighter image or move closer to the text.</p>';
-    resultBox.classList.add('show');
-    return;
+  /* Unsharp mask: value - 0.3*(value - blur) */
+  var sharp = new Uint8Array(w * h);
+  var kernel = [0,-1,0,-1,5,-1,0,-1,0];
+  for (var y = 1; y < h-1; y++) {
+    for (var x = 1; x < w-1; x++) {
+      var s = 0, ki = 0;
+      for (var ky = -1; ky <= 1; ky++)
+        for (var kx = -1; kx <= 1; kx++)
+          s += grey[(y+ky)*w+(x+kx)] * kernel[ki++];
+      sharp[y*w+x] = Math.min(255, Math.max(0, s));
+    }
   }
 
-  tokens.forEach(function(tok) {
-    var pill = document.createElement('button');
-    pill.className   = 'cam-match-pill';
-    pill.textContent = tok;
-    pill.type        = 'button';
-    pill.onclick     = function() {
-      document.getElementById('q').value = tok;
-      closeCamera();
-      doSearch();
-      showToast('🔍 Searching: ' + tok, 'ok');
-    };
-    matchBox.appendChild(pill);
-  });
-
-  resultBox.querySelector('b').textContent = '🔍 Tap a token to search:';
-  resultBox.classList.add('show');
+  /* Adaptive threshold (local mean, 5px radius, offset -8) */
+  var r = 5;
+  for (var y3 = 0; y3 < h; y3++) {
+    for (var x3 = 0; x3 < w; x3++) {
+      var sum = 0, cnt = 0;
+      for (var dy = -r; dy <= r; dy++) {
+        var ny = y3+dy; if (ny<0||ny>=h) continue;
+        for (var dx = -r; dx <= r; dx++) {
+          var nx = x3+dx; if (nx<0||nx>=w) continue;
+          sum += sharp[ny*w+nx]; cnt++;
+        }
+      }
+      var pix = sharp[y3*w+x3] < (sum/cnt) - 8 ? 0 : 255;
+      var i4  = (y3*w+x3)*4;
+      d[i4] = d[i4+1] = d[i4+2] = pix; d[i4+3] = 255;
+    }
+  }
 }
 
-/* Extract vehicle plates, block codes, names from OCR text */
-function extractTokens(raw) {
-  var seen   = {};
-  var tokens = [];
+/* ── Parse OCR text → Indian plate candidates ── */
+function parsePlates(raw) {
+  if (!raw) return [];
+  var text = raw.toUpperCase().replace(/[^A-Z0-9\s]/g,' ').replace(/\s+/g,' ').trim();
+  var seen = {}, out = [];
 
-  function add(t) {
-    t = t.trim().toUpperCase();
-    if (t.length < 2 || seen[t]) return;
-    seen[t] = 1;
-    tokens.push(t);
+  function add(p) {
+    p = p.replace(/\s/g,'');
+    if (p.length < 4 || seen[p]) return;
+    seen[p] = 1; out.push(p);
   }
 
-  /* 1. Indian vehicle number plates  e.g. KA-01-AB-1234 or KA51AB1234 */
-  var plateRe = /[A-Z]{2}[\s-]?\d{1,2}[\s-]?[A-Z]{1,3}[\s-]?\d{1,4}/gi;
-  var plates  = raw.match(plateRe) || [];
-  plates.forEach(function(p) { add(p.replace(/[\s-]/g, '')); });
-
-  /* 2. Block codes  B1 … B18 */
-  var blockRe = /\bB\s?([1-9]|1[0-8])\b/gi;
-  var blocks  = raw.match(blockRe) || [];
-  blocks.forEach(function(b) { add(b.replace(/\s/g, '')); });
-
-  /* 3. Phone numbers (10-digit sequences) */
-  var phoneRe = /\b[6-9]\d{9}\b/g;
-  var phones  = raw.match(phoneRe) || [];
-  phones.forEach(function(p) { add(p); });
-
-  /* 4. Flat numbers  001-304 or GF style */
-  var flatRe = /\b([1-4]|[12][0-9]?[0-4]|30[0-4])\b/g;
-  var flats  = raw.match(flatRe) || [];
-  flats.forEach(function(f) {
-    var n = parseInt(f, 10);
-    if ((n >= 1 && n <= 4) || (n >= 100 && n <= 304)) add(f);
+  /* Full plate: KA01AB1234 */
+  (text.match(/[A-Z]{2}\s?\d{1,2}\s?[A-Z]{1,3}\s?\d{1,4}/g)||[]).forEach(function(p){
+    add(p);
+    /* OCR confusion variants */
+    add(p.replace(/O/g,'0').replace(/I/g,'1').replace(/B(?=\d)/g,'8'));
+    add(p.replace(/0/g,'O').replace(/1/g,'I'));
   });
+  /* State+district partial: KA01 */
+  (text.match(/\b[A-Z]{2}\s?\d{2}\b/g)||[]).forEach(function(p){ add(p); });
+  /* Suffix: AB1234 */
+  (text.match(/\b[A-Z]{1,3}\s?\d{3,4}\b/g)||[]).forEach(function(p){ add(p); });
 
-  /* 5. Capitalised words (likely names) — min 3 chars, not just digits */
-  var words = raw.split(/\s+/);
-  words.forEach(function(w) {
-    w = w.replace(/[^a-zA-Z\u0C80-\u0CFF]/g, '');   // keep Latin + Kannada chars
-    if (w.length >= 3 && /[a-zA-Z\u0C80-\u0CFF]/.test(w)) {
-      add(w);
+  return out;
+}
+
+/* ── Match candidates against resident database ── */
+function matchPlates(candidates) {
+  var found = [], unmatchedSeen = {}, unmatched = [];
+  candidates.forEach(function(cand) {
+    var cn = cand.replace(/[\s-]/g,'').toUpperCase();
+    var matchedRecs = [];
+    ALL.forEach(function(r) {
+      r.plates.forEach(function(plate) {
+        var pn = plate.replace(/[\s-]/g,'').toUpperCase();
+        if (pn===cn || pn.indexOf(cn)!==-1 || cn.indexOf(pn)!==-1) {
+          if (matchedRecs.indexOf(r)===-1) matchedRecs.push(r);
+        }
+      });
+    });
+    if (matchedRecs.length) {
+      found.push({ plate: cn, records: matchedRecs });
+    } else if (!unmatchedSeen[cn]) {
+      unmatchedSeen[cn] = 1; unmatched.push(cn);
     }
   });
+  return { found: found, unmatched: unmatched };
+}
 
-  return tokens.slice(0, 18);   /* cap at 18 pills */
+/* ── Handle plate OCR result ── */
+function handlePlateOCR(raw) {
+  var candidates = parsePlates(raw);
+  if (!candidates.length) {
+    setCamStatus('No plate detected — move closer or improve lighting', 'error');
+    return;
+  }
+  setLivePlate(candidates[0], true);
+  var result = matchPlates(candidates);
+
+  if (result.found.length) {
+    var total = 0; result.found.forEach(function(f){total+=f.records.length;});
+    setCamStatus('Plate matched — ' + total + ' resident(s) found!', 'found');
+    showToast('Plate matched in directory!', 'ok', 2500);
+    if (autoScanActive) stopAutoScan(); /* stop auto once a match is found */
+  } else {
+    setCamStatus('Plate read — not registered in directory', '');
+  }
+  renderPlateResults(result);
+}
+
+/* ── Render result pills ── */
+function renderPlateResults(result) {
+  var grid  = document.getElementById('cam-plates-grid');
+  var wrap  = document.getElementById('cam-matches-wrap');
+  var title = document.getElementById('cam-matches-title');
+  grid.innerHTML = '';
+
+  title.textContent = result.found.length
+    ? 'Matched residents — tap to view'
+    : 'Detected plates — tap to search';
+
+  result.found.forEach(function(f) {
+    var label = f.plate;
+    if (f.records.length === 1) {
+      label += '  ·  ' + f.records[0].name
+             + ' (' + f.records[0].block + '-' + f.records[0].flat + ')';
+    } else {
+      label += '  ·  ' + f.records.length + ' residents';
+    }
+    var btn = mkPlateBtn(label, 'found');
+    btn.onclick = function() {
+      document.getElementById('q').value = f.plate;
+      closeCamera(); doSearch();
+      showToast(f.plate + ' — ' + f.records.length + ' result(s)', 'ok', 3000);
+    };
+    grid.appendChild(btn);
+  });
+
+  result.unmatched.forEach(function(p) {
+    var btn = mkPlateBtn(p + '  (not registered)', 'raw');
+    btn.onclick = function() {
+      document.getElementById('q').value = p;
+      closeCamera(); doSearch();
+    };
+    grid.appendChild(btn);
+  });
+
+  if (!result.found.length && !result.unmatched.length) {
+    grid.innerHTML = '<div class="cam-nomatch">No plate patterns found.<br>'
+      + 'Keep plate inside the yellow box.</div>';
+  }
+  wrap.classList.add('show');
+}
+
+function mkPlateBtn(label, cls) {
+  var btn = document.createElement('button');
+  btn.className   = 'plate-match-btn ' + cls;
+  btn.type        = 'button';
+  btn.textContent = label;
+  return btn;
+}
+
+/* ── UI helpers ── */
+function setCamStatus(msg, cls) {
+  var el = document.getElementById('cam-status');
+  el.textContent = msg;
+  el.className   = 'cam-status' + (cls ? ' '+cls : '');
+}
+function setLivePlate(text, show) {
+  var w = document.getElementById('live-plate-wrap');
+  var p = document.getElementById('live-plate');
+  p.textContent = text || '—';
+  if (show && text) w.classList.add('show'); else w.classList.remove('show');
+}
+function setScanBar(pct) {
+  document.getElementById('scan-bar').style.width = pct + '%';
+}
+function resetScanUI() {
+  setCamStatus('Point rear camera at a number plate', '');
+  setLivePlate('', false); setScanBar(0);
+  document.getElementById('cam-matches-wrap').classList.remove('show');
+  document.getElementById('snap-btn').disabled = false;
 }
 </script>
 </body>
